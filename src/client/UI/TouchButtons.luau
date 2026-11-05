@@ -2,7 +2,9 @@
 --
 --          Escanear
 --     Fijar        Rodar
---        GOLPEAR      (Saltar)
+--   Empuje  GOLPEAR      (Saltar)
+--
+-- Empuje solo sale cuando ya tienes ese poder.
 --
 -- GOLPEAR funciona igual que el clic: tócalo para golpear (varias veces = combo) y déjalo
 -- apretado para cargar el giro; suelta para girar. Llaman a las mismas acciones que las teclas
@@ -14,6 +16,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local Actions = require(script.Parent.Parent.Actions)
 local LockOn = require(script.Parent.Parent.LockOn)
+local PowersClient = require(script.Parent.Parent.Powers)
 
 local player = Players.LocalPlayer
 
@@ -30,6 +33,7 @@ local LAYOUT = {
 	Dodge = { x = -10, y = -95, size = 56 },
 	Lock = { x = -170, y = -70, size = 50 },
 	Scan = { x = -95, y = -140, size = 50 },
+	Push = { x = -190, y = 5, size = 56 },
 }
 
 local function makeButton(parent: Instance, key: string, text: string, color: Color3): TextButton
@@ -120,12 +124,16 @@ function TouchButtons.Start()
 	local lock = makeButton(cluster, "Lock", "Fijar", BUTTON)
 	bindTouch(lock, "Fijar")
 	bindTouch(makeButton(cluster, "Scan", "Escanear", BUTTON), "Escanear")
+	local push = makeButton(cluster, "Push", "Empuje", Color3.fromRGB(60, 150, 190))
+	bindTouch(push, "Empuje")
 
 	RunService.RenderStepped:Connect(function()
 		local character = player.Character
 		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
 		cluster.Visible = humanoid ~= nil and humanoid.Health > 0
 		lock.TextColor3 = if LockOn.Target() then ACTIVE else TEXT
+		push.Visible = player:GetAttribute("Empuje") == true
+		push.BackgroundTransparency = if PowersClient.Ready() >= 1 then 0.3 else 0.7
 	end)
 end
 

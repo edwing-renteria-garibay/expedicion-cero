@@ -45,7 +45,23 @@ Documento de diseño: https://claude.ai/artifact/GYB3zhAxfYH2UVzHY8XDz4
   al de saltar (`src/client/UI/TouchButtons.luau`)
 - Sonidos vacíos en `src/shared/Config/Sounds.luau`, para que pongas los que te gusten
 
-Lo que sigue (semana 3): la Selva Brumosa completa, con puzzles, mazmorra, jefe y el poder de Empuje.
+- **Selva Brumosa**, la primera isla (`src/server/Zones/Selva.luau`): su portal en Puerto Eco ya
+  tiene energía. Camino de lodo con máquinas, niebla verde y el **Templo de raíces**:
+  1. Sala de combate: la puerta se abre al romper todas las máquinas
+  2. Placa con tiempo: párate en ella y corre a la puerta en 7 segundos
+  3. Gran cofre con el poder de **Empuje** (E / L2 / botón "Empuje") y un bloque que hay que
+     empujar sobre la placa (si se atora, la palanca dorada lo regresa)
+  4. Pared agrietada (rómpela con Empuje) que esconde la llave del jefe
+  5. **Gusano de chatarra gigante** (`src/server/Bosses/Worm.luau`): sale de la tierra donde
+     ves el círculo café y se lanza contra ti. Su armadura aguanta el bastón: túmbalo con
+     Empuje y pégale mientras está en el piso. Suelta el **núcleo de la selva** y un portal de
+     regreso
+  - El templo se vuelve a cerrar si nadie está en la selva por un minuto
+- El **pedestal** de la plaza enciende un hueco por cada núcleo que tengas
+- Puertas, placas, bloques y paredes agrietadas: `src/server/Puzzles.luau`
+
+Lo que sigue: tienda y taller de Chispa (gastar cristales), revivir a un amigo en co-op y la
+segunda isla, el Volcán Brasa.
 
 ## Cómo probarlo
 

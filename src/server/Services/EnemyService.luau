@@ -387,18 +387,25 @@ local function turretBrain(model: Model, info)
 	end
 end
 
-local function spawnEnemy(kind: string, home: Vector3)
+export type SpawnOptions = {
+	respawn: boolean?, -- false = no vuelve a salir (por ejemplo, en las salas de la mazmorra)
+	parent: Instance?, -- dónde ponerla (si no, en la carpeta "Oxido")
+	onDied: ((Model) -> ())?, -- se llama cuando la rompen
+}
+
+local function spawnEnemy(kind: string, home: Vector3, options: SpawnOptions?): Model?
 	local info = Enemies.types[kind]
 	if not info then
 		warn("[Enemigos] No existe el tipo", kind)
-		return
+		return nil
 	end
+	local opts: SpawnOptions = options or {}
 	local model = if info.speed > 0 then buildWalker(kind, info, home) else buildTurret(kind, info, home)
 	local humanoid = model:FindFirstChildOfClass("Humanoid") :: Humanoid
 	healthBar(model, humanoid)
 	model:SetAttribute("Tipo", kind)
 	CollectionService:AddTag(model, "Enemy")
-	model.Parent = folder
+	model.Parent = opts.parent or folder
 	local root = model.PrimaryPart :: BasePart
 	if not root.Anchored then
 		root:SetNetworkOwner(nil) -- el servidor la mueve, no los jugadores
@@ -413,7 +420,17 @@ local function spawnEnemy(kind: string, home: Vector3)
 		Pickups.Drop(position, count, math.random() < info.heartChance)
 		fx:FireAllClients("Break", position, info.color, info.size)
 		model:Destroy()
-		task.delay(Enemies.respawn, spawnEnemy, kind, home)
+		if opts.onDied then
+			opts.onDied(model)
+		end
+		if opts.respawn ~= false then
+			task.delay(Enemies.respawn, function()
+				-- Si su carpeta ya no existe (la mazmorra se reinició), ya no sale
+				if opts.parent == nil or opts.parent.Parent ~= nil then
+					spawnEnemy(kind, home, opts)
+				end
+			end)
+		end
 	end)
 
 	task.spawn(function()
@@ -423,6 +440,15 @@ local function spawnEnemy(kind: string, home: Vector3)
 			turretBrain(model, info)
 		end
 	end)
+	return model
+end
+
+-- Pone una máquina del Óxido (la usan las mazmorras)
+EnemyService.Spawn = spawnEnemy
+
+-- Dispara una bola de óxido (la usa también el jefe)
+EnemyService.FireBall = function(owner: Model, from: Vector3, direction: Vector3, info)
+	fireBall(owner, from, direction, info)
 end
 
 function EnemyService.Start(spots: { { kind: string, position: Vector3 } })

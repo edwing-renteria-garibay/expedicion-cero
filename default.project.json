@@ -16,6 +16,9 @@
         },
         "Fx": {
           "$className": "RemoteEvent"
+        },
+        "Power": {
+          "$className": "RemoteEvent"
         }
       }
     },

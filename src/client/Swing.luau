@@ -13,6 +13,7 @@
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Powers = require(ReplicatedStorage.Shared.Config.Powers)
 local Staff = require(ReplicatedStorage.Shared.Config.Staff)
 local StaffModel = require(ReplicatedStorage.Shared.StaffModel)
 
@@ -26,6 +27,7 @@ local POSES: { [any]: { from: Pose, to: Pose } } = {
 	[2] = { from = { yaw = 75, pitch = 100 }, to = { yaw = -80, pitch = 80 } }, -- de izquierda a derecha
 	[3] = { from = { yaw = 0, pitch = 200 }, to = { yaw = 0, pitch = 55 } }, -- de arriba hacia abajo
 	Giro = { from = { yaw = -90, pitch = 90 }, to = { yaw = -90, pitch = 90 } }, -- brazo extendido mientras giras
+	Empuje = { from = { yaw = 0, pitch = 40 }, to = { yaw = 0, pitch = 100 } }, -- estocada al frente
 }
 
 -- Partes de la animación (fracción del tiempo total)
@@ -98,9 +100,9 @@ local function animate(joint: Motor6D, duration: number, fn: (number) -> (), don
 	end)
 end
 
--- Un golpe del bastón (kind = 1, 2, 3 o "Giro")
+-- Un golpe del bastón (kind = 1, 2, 3, "Giro" o un poder como "Empuje")
 function Swing.Play(character: Model, kind: any)
-	local attack = Staff.attacks[kind]
+	local attack = Staff.attacks[kind] or (Powers :: any)[kind]
 	local poses = POSES[kind]
 	local joint = shoulderOf(character)
 	if not attack or not poses or not joint then

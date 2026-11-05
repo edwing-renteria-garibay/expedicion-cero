@@ -14,6 +14,7 @@ local KEYBOARD = {
 	"Shift: rodar",
 	"F: fijar enemigo",
 	"R: Chispa escanea",
+	"E: Empuje (cuando lo tengas)",
 }
 
 local GAMEPAD = {
@@ -21,6 +22,7 @@ local GAMEPAD = {
 	"B / Círculo: rodar",
 	"R3: fijar enemigo",
 	"Y / Triángulo: Chispa escanea",
+	"L2: Empuje (cuando lo tengas)",
 }
 
 function Controls.Start()

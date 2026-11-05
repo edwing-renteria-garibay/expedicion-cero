@@ -33,7 +33,7 @@ local C = {
 
 -- Los cuatro portales: nombre, color y la frase de Chispa
 local PORTALS = {
-	{ key = "Selva", name = "Selva Brumosa", color = Color3.fromRGB(80, 220, 110), x = -75 },
+	{ key = "Selva", name = "Selva Brumosa", color = Color3.fromRGB(80, 220, 110), x = -75, open = true },
 	{ key = "Volcan", name = "Volcán Brasa", color = Color3.fromRGB(255, 120, 40), x = -25 },
 	{ key = "Glaciar", name = "Glaciar Silencio", color = Color3.fromRGB(120, 220, 255), x = 25 },
 	{ key = "Ruinas", name = "Ruinas del Cielo", color = Color3.fromRGB(190, 120, 255), x = 75 },
@@ -100,6 +100,7 @@ local function sign(parent: BasePart, title: string, subtitle: string?, color: C
 	gui.AlwaysOnTop = false
 	gui.Parent = parent
 	local label = Instance.new("TextLabel")
+	label.Name = "Titulo"
 	label.BackgroundTransparency = 1
 	label.Size = UDim2.new(1, 0, 0.6, 0)
 	label.Font = Enum.Font.FredokaOne
@@ -110,6 +111,7 @@ local function sign(parent: BasePart, title: string, subtitle: string?, color: C
 	label.Parent = gui
 	if subtitle then
 		local small = Instance.new("TextLabel")
+		small.Name = "Subtitulo"
 		small.BackgroundTransparency = 1
 		small.Position = UDim2.fromScale(0, 0.6)
 		small.Size = UDim2.new(1, 0, 0.4, 0)
@@ -265,19 +267,26 @@ local function portal(info, z: number)
 		Color = C.stone,
 		Parent = model,
 	})
-	sign(arch, info.name, "Sin energía", info.color)
-	part({
+	sign(arch, info.name, if info.open then "Abierto" else "Sin energía", info.color)
+	local light = part({
 		Name = "Luz",
 		Shape = Enum.PartType.Cylinder,
 		Size = Vector3.new(0.4, 13, 13),
 		CFrame = CFrame.new(x, GROUND + 9, z) * CFrame.Angles(0, math.rad(90), 0),
 		Color = info.color,
 		Material = Enum.Material.Neon,
-		Transparency = 0.75,
-		CanCollide = true, -- todavía no se puede pasar
+		Transparency = if info.open then 0.3 else 0.75,
+		CanCollide = not info.open, -- los apagados todavía no se pueden pasar
 		Parent = model,
 	})
-	hint(info.key, Vector3.new(x, GROUND, z + 8), 11)
+	if info.open then
+		-- Al tocarlo te lleva a su isla (PortalService)
+		light:SetAttribute("Destino", info.key)
+		CollectionService:AddTag(light, "Portal")
+		hint(info.key .. "Abierto", Vector3.new(x, GROUND, z + 8), 11)
+	else
+		hint(info.key, Vector3.new(x, GROUND, z + 8), 11)
+	end
 end
 
 -- Una casita de caricatura con techo de dos aguas y un letrero
@@ -602,6 +611,9 @@ World.enemySpots = {
 	{ kind = "Torreta", position = SCRAPYARD + Vector3.new(-22, 0, -14) },
 	{ kind = "Torreta", position = SCRAPYARD + Vector3.new(18, 0, 22) },
 }
+
+-- Dónde apareces al regresar de una isla: frente a los portales, mirando a la plaza
+World.arrival = CFrame.lookAt(Vector3.new(-75, GROUND + 3, -84), Vector3.new(-75, GROUND + 3, 0))
 
 -- Dónde van los muñecos de práctica (los arma Dummies)
 World.dummySpots = {

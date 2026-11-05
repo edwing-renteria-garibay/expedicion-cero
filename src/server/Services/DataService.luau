@@ -3,9 +3,11 @@
 --   crystals = cristales para gastar (en la tienda y el taller, más adelante)
 --   hearts   = cuántos corazones tiene (empieza con Settings.hearts.start)
 --   chests   = los cofres que ya abrió: { [nombre] = true }
+--   powers   = los poderes del bastón que ganó: { Empuje = true }
+--   cores    = los núcleos que recuperó: { Selva = true }
 --
 -- Cuando cambian los cristales o los corazones se ponen como atributos del jugador
--- ("Cristales", "Corazones"), así la pantalla los ve, y en la tabla de puntos (leaderstats).
+-- ("Cristales", "Corazones", "Nucleos" y uno por poder, como "Empuje"), así la pantalla los ve, y en la tabla de puntos (leaderstats).
 --
 -- En Studio no se guarda nada (Settings.testing). En el juego publicado guarda al salir y cada
 -- 2 minutos.
@@ -22,6 +24,8 @@ export type Profile = {
 	crystals: number,
 	hearts: number,
 	chests: { [string]: boolean },
+	powers: { [string]: boolean },
+	cores: { [string]: boolean },
 }
 
 local profiles: { [Player]: Profile } = {}
@@ -63,6 +67,14 @@ local function publish(player: Player)
 	end
 	player:SetAttribute("Cristales", profile.crystals)
 	player:SetAttribute("Corazones", profile.hearts)
+	local cores = 0
+	for _ in profile.cores do
+		cores += 1
+	end
+	player:SetAttribute("Nucleos", cores)
+	for power in profile.powers do
+		player:SetAttribute(power, true)
+	end
 	local stats = player:FindFirstChild("leaderstats")
 	local value = stats and stats:FindFirstChild("Cristales") :: IntValue?
 	if value then
@@ -75,6 +87,8 @@ function DataService.Load(player: Player)
 		crystals = 0,
 		hearts = Settings.hearts.start,
 		chests = {},
+		powers = {},
+		cores = {},
 	}
 	if store then
 		local ok, data = pcall(function()
@@ -88,6 +102,8 @@ function DataService.Load(player: Player)
 				Settings.hearts.max
 			)
 			profile.chests = if type(data.chests) == "table" then data.chests else {}
+			profile.powers = if type(data.powers) == "table" then data.powers else {}
+			profile.cores = if type(data.cores) == "table" then data.cores else {}
 		elseif not ok then
 			warn("[Datos] No se pudo leer a", player.Name, data)
 		end
@@ -133,6 +149,28 @@ function DataService.OpenChest(player: Player, name: string): boolean
 		return false
 	end
 	profile.chests[name] = true
+	return true
+end
+
+-- Le da un poder del bastón (por ejemplo, "Empuje"). Devuelve false si ya lo tenía.
+function DataService.GivePower(player: Player, power: string): boolean
+	local profile = profiles[player]
+	if not profile or profile.powers[power] then
+		return false
+	end
+	profile.powers[power] = true
+	publish(player)
+	return true
+end
+
+-- Guarda un núcleo recuperado (por ejemplo, "Selva"). Devuelve false si ya lo tenía.
+function DataService.GiveCore(player: Player, core: string): boolean
+	local profile = profiles[player]
+	if not profile or profile.cores[core] then
+		return false
+	end
+	profile.cores[core] = true
+	publish(player)
 	return true
 end
 

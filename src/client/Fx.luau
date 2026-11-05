@@ -11,6 +11,12 @@
 --   "Block" (posición)         -> tu golpe rebotó en un escudo
 --   "Pop"   (posición, color)  -> una bola de óxido reventó
 --   "Break" (posición, color, tamaño) -> una máquina del Óxido se rompió en pedazos
+--   "Wave"  (posición, dirección) -> la onda del Empuje
+--   "Slide" (posición)         -> un bloque se movió (polvo)
+--   "Door"  (posición, abierta) -> una puerta se abrió o se cerró
+--   "Burrow" (posición, segundos) -> el gusano va a salir aquí (círculo de tierra)
+--   "Slam"  (posición)         -> algo grande pegó en el piso (polvo y temblor)
+--   "Travel" (destino)         -> cruzaste un portal (la pantalla destella)
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -165,6 +171,80 @@ local function breakApart(position: Vector3, color: Color3, size: number)
 	sparks(position, Color3.fromRGB(255, 150, 60), 10)
 end
 
+-- Un anillo plano que crece y se desvanece
+local function ring(
+	position: Vector3,
+	color: Color3,
+	from: number,
+	to: number,
+	seconds: number,
+	transparency: number
+)
+	local p = Instance.new("Part")
+	p.Shape = Enum.PartType.Cylinder
+	p.Anchored = true
+	p.CanCollide = false
+	p.CanQuery = false
+	p.CanTouch = false
+	p.Material = Enum.Material.Neon
+	p.Color = color
+	p.Transparency = transparency
+	p.Size = Vector3.new(0.3, from, from)
+	p.CFrame = CFrame.new(position) * CFrame.Angles(0, 0, math.rad(90))
+	p.Parent = folder
+	local tween = TweenService:Create(p, TweenInfo.new(seconds, Enum.EasingStyle.Quad), {
+		Size = Vector3.new(0.3, to, to),
+		Transparency = 1,
+	})
+	tween:Play()
+	tween.Completed:Once(function()
+		p:Destroy()
+	end)
+	return p
+end
+
+-- La onda del Empuje: un disco que sale hacia enfrente
+local function wave(position: Vector3, look: Vector3)
+	local p = Instance.new("Part")
+	p.Shape = Enum.PartType.Cylinder
+	p.Anchored = true
+	p.CanCollide = false
+	p.CanQuery = false
+	p.CanTouch = false
+	p.Material = Enum.Material.Neon
+	p.Color = Color3.fromRGB(150, 240, 255)
+	p.Transparency = 0.3
+	p.Size = Vector3.new(0.4, 3, 3)
+	-- El disco mira hacia donde va (su eje X apunta hacia enfrente)
+	local frame = CFrame.lookAt(position, position + look) * CFrame.Angles(0, math.rad(90), 0)
+	p.CFrame = frame
+	p.Parent = folder
+	local tween = TweenService:Create(p, TweenInfo.new(0.35, Enum.EasingStyle.Quad), {
+		CFrame = frame * CFrame.new(12, 0, 0),
+		Size = Vector3.new(0.4, 12, 12),
+		Transparency = 1,
+	})
+	tween:Play()
+	tween.Completed:Once(function()
+		p:Destroy()
+	end)
+end
+
+local function shakeIfNear(position: Vector3, distance: number)
+	local root = myRoot()
+	if not root or (root.Position - position).Magnitude > distance then
+		return
+	end
+	local camera = workspace.CurrentCamera
+	task.spawn(function()
+		for i = 1, 8 do
+			local strength = (8 - i) * 0.08
+			camera.CFrame *= CFrame.new((math.random() - 0.5) * strength, (math.random() - 0.5) * strength, 0)
+			task.wait()
+		end
+	end)
+end
+
 function Fx.Start()
 	folder = Instance.new("Folder")
 	folder.Name = "Efectos"
@@ -227,7 +307,9 @@ function Fx.Start()
 		elseif kind == "Chest" and typeof(a) == "Vector3" then
 			sparks(a + Vector3.new(0, 2, 0), Color3.fromRGB(255, 220, 90), 14)
 			Sfx.Play("chest")
-			Chispa.Say("Cofre", b)
+			if typeof(b) == "number" and b > 0 then
+				Chispa.Say("Cofre", b)
+			end
 			if c then
 				Chispa.Say("CofreCorazon")
 			end
@@ -240,6 +322,29 @@ function Fx.Start()
 		elseif kind == "Break" and typeof(a) == "Vector3" then
 			breakApart(a, b, c or 1)
 			Sfx.Play("breakEnemy")
+		elseif kind == "Wave" and typeof(a) == "Vector3" and typeof(b) == "Vector3" then
+			wave(a + b * 2, b)
+		elseif kind == "Slide" and typeof(a) == "Vector3" then
+			sparks(a - Vector3.new(0, 2.5, 0), Color3.fromRGB(190, 170, 130), 8)
+		elseif kind == "Door" and typeof(a) == "Vector3" then
+			sparks(a - Vector3.new(0, 8, 0), Color3.fromRGB(190, 170, 130), 10)
+			Sfx.Play("door")
+		elseif kind == "Burrow" and typeof(a) == "Vector3" then
+			local warning = ring(a + Vector3.new(0, 0.3, 0), Color3.fromRGB(120, 80, 40), 4, 16, b or 1, 0.2)
+			warning.Material = Enum.Material.Ground
+		elseif kind == "Slam" and typeof(a) == "Vector3" then
+			ring(a + Vector3.new(0, 0.4, 0), Color3.fromRGB(200, 170, 120), 4, 22, 0.5, 0.3)
+			sparks(a, Color3.fromRGB(150, 110, 70), 12)
+			shakeIfNear(a, 50)
+			Sfx.Play("slam")
+		elseif kind == "Travel" then
+			flash.BackgroundColor3 = Color3.new(1, 1, 1)
+			flash.BackgroundTransparency = 0
+			TweenService:Create(flash, TweenInfo.new(0.8), { BackgroundTransparency = 1 }):Play()
+			task.delay(0.8, function()
+				flash.BackgroundColor3 = Color3.fromRGB(255, 30, 40)
+			end)
+			Sfx.Play("portal")
 		end
 	end)
 end

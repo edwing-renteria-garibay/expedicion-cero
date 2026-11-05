@@ -19,4 +19,8 @@ return {
 	chest = 0, -- abrir un cofre
 	block = 0, -- tu golpe rebota en un escudo
 	breakEnemy = 0, -- una máquina del Óxido se rompe
+	push = 0, -- el Empuje
+	door = 0, -- una puerta se abre o se cierra
+	slam = 0, -- el gusano sale de la tierra o se lanza
+	portal = 0, -- cruzar un portal
 }

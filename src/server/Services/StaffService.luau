@@ -65,6 +65,10 @@ end
 
 -- ¿El escudo de un Escudero para este golpe? (de frente y sin romper la guardia)
 local function blocked(enemy: Model, root: BasePart, kind: any, from: Vector3): boolean
+	-- Blindado (el jefe con su armadura puesta): nada le entra
+	if enemy:GetAttribute("Blindado") then
+		return true
+	end
 	if not enemy:GetAttribute("Escudo") or Enemies.guardBreakers[kind] then
 		return false
 	end
@@ -85,7 +89,7 @@ local function damage(player: Player, enemy: Model, attack, kind: any, from: Vec
 	end
 	if blocked(enemy, root, kind, from) then
 		fx:FireAllClients("Block", root.Position + (from - root.Position).Unit * 2)
-		fx:FireClient(player, "Say", "Escudo")
+		fx:FireClient(player, "Say", if enemy:GetAttribute("Blindado") then "Blindado" else "Escudo")
 		return
 	end
 	humanoid:TakeDamage(attack.damage)
@@ -118,6 +122,9 @@ local function droneZap(player: Player, enemy: Model)
 			return
 		end
 		fx:FireAllClients("Zap", player, root.Position)
+		if enemy:GetAttribute("Blindado") then
+			return -- rebota en la armadura
+		end
 		humanoid:TakeDamage(Drone.zap.damage)
 		fx:FireAllClients("Hit", root.Position, Drone.zap.damage)
 	end)
