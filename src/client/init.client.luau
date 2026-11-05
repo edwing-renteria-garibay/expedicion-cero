@@ -10,6 +10,7 @@ local Fx = require(script.Fx)
 local Hub = require(script.Hub)
 local LockOn = require(script.LockOn)
 local Powers = require(script.Powers)
+local Prompts = require(script.Prompts)
 local Staff = require(script.Staff)
 local Zones = require(script.Zones)
 local BossBar = require(script.UI.BossBar)
@@ -32,6 +33,7 @@ local parts = {
 	BossBar,
 	Hub,
 	Zones,
+	Prompts,
 }
 for _, part in parts do
 	task.spawn(function()

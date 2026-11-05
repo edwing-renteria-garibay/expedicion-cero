@@ -75,6 +75,13 @@ local function publish(player: Player)
 	for power in profile.powers do
 		player:SetAttribute(power, true)
 	end
+	-- Lo que ya tomó: así su pantalla esconde el aviso de "Abrir" o "Tomar" (client/Prompts)
+	for chest in profile.chests do
+		player:SetAttribute("Cofre_" .. chest, true)
+	end
+	for core in profile.cores do
+		player:SetAttribute("Nucleo_" .. core, true)
+	end
 	local stats = player:FindFirstChild("leaderstats")
 	local value = stats and stats:FindFirstChild("Cristales") :: IntValue?
 	if value then
@@ -149,6 +156,7 @@ function DataService.OpenChest(player: Player, name: string): boolean
 		return false
 	end
 	profile.chests[name] = true
+	publish(player)
 	return true
 end
 

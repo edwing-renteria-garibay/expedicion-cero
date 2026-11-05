@@ -37,7 +37,14 @@ local function setup(portal: Instance)
 		end
 		lastUse[player] = now
 		fx:FireClient(player, "Travel", name)
-		character:PivotTo(place)
+		-- Primero le manda a su pantalla el piso del destino (con StreamingEnabled, Roblox solo
+		-- carga lo que está cerca; sin esto caías debajo del suelo antes de que llegara el piso)
+		pcall(function()
+			player:RequestStreamAroundAsync(place.Position, 5)
+		end)
+		if character.Parent then
+			character:PivotTo(place)
+		end
 	end)
 end
 

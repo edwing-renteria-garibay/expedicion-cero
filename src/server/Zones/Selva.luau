@@ -427,7 +427,7 @@ local function buildTemple()
 	-- Sala 3: el gran cofre con el Empuje y el bloque
 	local bigChest = chestModel(folder, "GranCofre", at(-20, -200), true)
 	CollectionService:AddTag(bigChest, "Secreto")
-	prompt(bigChest, "Abrir", "Gran cofre", function(player)
+	local bigPrompt = prompt(bigChest, "Abrir", "Gran cofre", function(player)
 		if DataService.GivePower(player, "Empuje") then
 			fx:FireClient(player, "Chest", bigChest.Position, 0, false)
 			fx:FireClient(player, "Say", "GranCofre")
@@ -435,6 +435,7 @@ local function buildTemple()
 			fx:FireClient(player, "Say", "YaEmpuje")
 		end
 	end)
+	bigPrompt:SetAttribute("OcultarSi", "Empuje") -- si ya tienes el Empuje, no sale
 	hint(folder, "GranCofreCerca", at(-20, -192), 10)
 
 	local blockStart = at(0, -196, 3)
@@ -487,18 +488,22 @@ local function buildTemple()
 	})
 	local keyChest = chestModel(folder, "CofreLlave", at(38, -255), false)
 	CollectionService:AddTag(keyChest, "Secreto")
-	prompt(keyChest, "Abrir", "Cofre", function(player)
+	local keyPrompt
+	keyPrompt = prompt(keyChest, "Abrir", "Cofre", function(player)
 		if folder:GetAttribute("LlaveJefe") then
 			fx:FireClient(player, "Say", "CofreVacio")
 			return
 		end
 		folder:SetAttribute("LlaveJefe", true)
+		keyPrompt.Enabled = false -- la llave es de todo el grupo: ya nadie la vuelve a tomar
 		fx:FireAllClients("Chest", keyChest.Position, 0, false)
 		fx:FireAllClients("Say", "Llave")
 	end)
-	prompt(bossDoor, "Abrir", "Puerta del jefe", function(player)
+	local doorPrompt
+	doorPrompt = prompt(bossDoor, "Abrir", "Puerta del jefe", function(player)
 		if folder:GetAttribute("LlaveJefe") then
 			Puzzles.SetDoor("SelvaJefe", true)
+			doorPrompt.Enabled = false
 		else
 			fx:FireClient(player, "Say", "PuertaJefe")
 		end
@@ -522,7 +527,7 @@ local function buildTemple()
 		light.Range = 20
 		light.Brightness = 3
 		light.Parent = core
-		prompt(core, "Tomar", "Núcleo de la selva", function(player)
+		local corePrompt = prompt(core, "Tomar", "Núcleo de la selva", function(player)
 			if DataService.GiveCore(player, "Selva") then
 				fx:FireClient(player, "Chest", core.Position, 0, false)
 				fx:FireClient(player, "Say", "Nucleo")
@@ -530,6 +535,9 @@ local function buildTemple()
 				fx:FireClient(player, "Say", "YaNucleo")
 			end
 		end)
+		-- Si ya lo tomaste, en tu pantalla el núcleo y su aviso desaparecen (client/Prompts)
+		corePrompt:SetAttribute("OcultarSi", "Nucleo_Selva")
+		corePrompt:SetAttribute("EsconderPieza", true)
 		-- Portal de regreso a Puerto Eco
 		local back = part(folder, {
 			Name = "PortalRegreso",

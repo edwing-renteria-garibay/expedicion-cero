@@ -23,6 +23,8 @@ local function setup(chest: Instance)
 	prompt.HoldDuration = 0.6
 	prompt.MaxActivationDistance = 9
 	prompt.RequiresLineOfSight = false
+	-- Si ya lo abriste, tu pantalla esconde el aviso (client/Prompts)
+	prompt:SetAttribute("OcultarSi", "Cofre_" .. tostring(chest:GetAttribute("Cofre")))
 	prompt.Parent = chest.PrimaryPart
 	prompt.Triggered:Connect(function(player)
 		local name = chest:GetAttribute("Cofre")

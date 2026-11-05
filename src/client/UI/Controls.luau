@@ -11,7 +11,7 @@ local Controls = {}
 local KEYBOARD = {
 	"Clic: golpear (3 seguidos = combo)",
 	"Mantén clic y suelta: giro",
-	"Shift: rodar",
+	"Shift: rodar (déjalo apretado para correr)",
 	"F: fijar enemigo",
 	"R: Chispa escanea",
 	"E: Empuje (cuando lo tengas)",
@@ -19,7 +19,7 @@ local KEYBOARD = {
 
 local GAMEPAD = {
 	"R2: golpear (mantén para el giro)",
-	"B / Círculo: rodar",
+	"B / Círculo: rodar (déjalo apretado para correr)",
 	"R3: fijar enemigo",
 	"Y / Triángulo: Chispa escanea",
 	"L2: Empuje (cuando lo tengas)",

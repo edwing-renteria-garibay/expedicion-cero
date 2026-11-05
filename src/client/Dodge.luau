@@ -1,6 +1,8 @@
--- Rodar (Shift, o Círculo / B en control): una rodada rápida hacia donde caminas (o hacia
--- adelante si estás quieto). Mientras ruedas nada te hace daño (el servidor lo marca con el
--- atributo "Esquivando"). Velocidad, duración y espera en Config/Staff (dodge).
+-- Rodar y correr (Shift, o Círculo / B en control, o el botón Rodar en celular):
+--   * al apretar, una rodada rápida hacia donde caminas (o hacia adelante si estás quieto).
+--     Mientras ruedas nada te hace daño (el servidor lo marca con el atributo "Esquivando").
+--   * si lo DEJAS apretado, al terminar la rodada sigues corriendo hasta que lo sueltes.
+-- Velocidades, duración y espera en Config/Staff (dodge).
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -17,17 +19,30 @@ local player = Players.LocalPlayer
 local Dodge = {}
 
 local last = 0
+local held = false -- Shift sigue apretado
+local normalSpeed: number? = nil
 
-local function roll()
+-- Correr mientras Shift siga apretado
+local function setRunning(on: boolean)
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if not humanoid then
+		return
+	end
+	normalSpeed = normalSpeed or humanoid.WalkSpeed
+	humanoid.WalkSpeed = if on then Staff.dodge.runSpeed else normalSpeed :: number
+end
+
+local function roll(): boolean
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
 	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
 	if not character or not humanoid or humanoid.Health <= 0 or not root then
-		return
+		return false
 	end
 	local now = os.clock()
 	if now - last < Staff.dodge.cooldown or humanoid.FloorMaterial == Enum.Material.Air then
-		return
+		return false
 	end
 	last = now
 
@@ -67,13 +82,27 @@ local function roll()
 		attachment:Destroy()
 		LockOn.hold = false
 		humanoid.AutoRotate = LockOn.Target() == nil
+		if held then
+			setRunning(true)
+		end
 	end)
+	return true
 end
 
 function Dodge.Start()
+	player.CharacterAdded:Connect(function()
+		normalSpeed = nil
+		held = false
+	end)
 	Actions.Bind("Rodar", function(_, state)
 		if state == Enum.UserInputState.Begin then
-			roll()
+			held = true
+			if not roll() then
+				setRunning(true) -- no se pudo rodar (en el aire o muy seguido): solo corre
+			end
+		elseif state == Enum.UserInputState.End or state == Enum.UserInputState.Cancel then
+			held = false
+			setRunning(false)
 		end
 		return Enum.ContextActionResult.Pass
 	end, false, Enum.KeyCode.LeftShift, Enum.KeyCode.ButtonB)

@@ -26,8 +26,10 @@ Staff.comboWindow = 0.6
 -- Cuánto tienes que mantener el clic para que el giro esté cargado
 Staff.chargeTime = 0.6
 
--- Rodar (Shift): qué tan rápido, cuánto dura y cada cuánto se puede
+-- Rodar (Shift): qué tan rápido, cuánto dura y cada cuánto se puede.
+-- runSpeed = qué tan rápido corres si dejas Shift apretado después de rodar (caminar = 20)
 Staff.dodge = {
+	runSpeed = 30,
 	speed = 55,
 	duration = 0.32,
 	cooldown = 0.7,
