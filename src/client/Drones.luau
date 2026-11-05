@@ -67,6 +67,11 @@ local function build(owner: Player): Drone
 		local fin = piece(model, "Aleta", Vector3.new(0.15, 0.6, 0.9), FIN)
 		fin.CFrame = CFrame.new(side * 0.85, 0.15, 0.1) * CFrame.Angles(0, 0, math.rad(25 * side))
 	end
+	-- Antena con una lucecita en la punta (como en el ícono del juego)
+	local antenna = piece(model, "Antena", Vector3.new(0.12, 0.6, 0.12), BAND)
+	antenna.CFrame = CFrame.new(0, 0.95, 0)
+	local tip = piece(model, "Punta", Vector3.one * 0.3, EYE, Enum.Material.Neon, Enum.PartType.Ball)
+	tip.CFrame = CFrame.new(0, 1.3, 0)
 	local light = Instance.new("PointLight")
 	light.Color = EYE
 	light.Range = 6
@@ -75,7 +80,7 @@ local function build(owner: Player): Drone
 	if owner == Players.LocalPlayer then
 		local gui = Instance.new("BillboardGui")
 		gui.Size = UDim2.fromOffset(80, 20)
-		gui.StudsOffsetWorldSpace = Vector3.new(0, 1.4, 0)
+		gui.StudsOffsetWorldSpace = Vector3.new(0, 2, 0)
 		gui.MaxDistance = 40
 		gui.Parent = body
 		local label = Instance.new("TextLabel")

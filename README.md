@@ -99,6 +99,6 @@ Para publicar:
 rojo build -o expedicion-cero.rbxl
 ```
 
-Abre `expedicion-cero.rbxl` en Studio y publícalo.
+Abre `expedicion-cero.rbxl` en Studio y publícalo. Pasos completos, ícono y miniatura en `docs/publicar/`.
 
 Guía para aprender cómo funciona el código: `docs/aprende/01-como-funciona.md`.

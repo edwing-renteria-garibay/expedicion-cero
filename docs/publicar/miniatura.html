@@ -1,0 +1,155 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap" rel="stylesheet">
+<style>html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+.t{font-family:'Fredoka',sans-serif;font-weight:700}</style></head><body>
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <radialGradient id="body" cx="0.38" cy="0.32" r="0.75">
+    <stop offset="0" stop-color="#ffffff"/><stop offset="0.6" stop-color="#e8eef6"/><stop offset="1" stop-color="#a9b8cc"/>
+  </radialGradient>
+  <linearGradient id="band" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#7fe6f2"/><stop offset="1" stop-color="#2a9fb4"/>
+  </linearGradient>
+  <radialGradient id="eye" cx="0.45" cy="0.4" r="0.6">
+    <stop offset="0" stop-color="#ffffff"/><stop offset="0.35" stop-color="#b8f6ff"/><stop offset="1" stop-color="#3fd2f5"/>
+  </radialGradient>
+  <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#8ff0ff" stop-opacity="0.9"/><stop offset="1" stop-color="#8ff0ff" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="fin" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ffc265"/><stop offset="1" stop-color="#f08a1c"/>
+  </linearGradient>
+  <linearGradient id="crys" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#e8fdff"/><stop offset="0.5" stop-color="#6ee6ff"/><stop offset="1" stop-color="#1f9fd0"/>
+  </linearGradient>
+  <linearGradient id="shaft" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#9a64c8"/><stop offset="1" stop-color="#5e3a86"/>
+  </linearGradient>
+  <!-- Chispa centrado en 0,0, radio 100 -->
+  <g id="chispa">
+    <circle r="150" fill="url(#glow)" opacity="0.5"/>
+    <!-- antena -->
+    <path d="M0,-98 L0,-150" stroke="#1e2b3d" stroke-width="14" stroke-linecap="round"/>
+    <path d="M0,-98 L0,-150" stroke="#2a9fb4" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="0" cy="-160" r="26" fill="url(#glow)"/>
+    <circle cx="0" cy="-158" r="14" fill="url(#eye)" stroke="#1e2b3d" stroke-width="6"/>
+    <!-- aletas chicas -->
+    <path d="M-88,10 Q-138,-20 -142,-62 Q-110,-40 -80,-34 Z" fill="url(#fin)" stroke="#1e2b3d" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M88,10 Q138,-20 142,-62 Q110,-40 80,-34 Z" fill="url(#fin)" stroke="#1e2b3d" stroke-width="7" stroke-linejoin="round"/>
+    <circle r="100" fill="url(#body)" stroke="#1e2b3d" stroke-width="8"/>
+    <!-- franja azul de arriba (como en el juego) -->
+    <path d="M-22,-97 Q0,-101 22,-97 L20,-66 Q0,-70 -20,-66 Z" fill="url(#band)" stroke="#1e2b3d" stroke-width="5" stroke-linejoin="round"/>
+    <!-- visor -->
+    <rect x="-66" y="-48" width="132" height="76" rx="38" fill="#1e2b3d"/>
+    <rect x="-56" y="-39" width="112" height="58" rx="29" fill="#16384f"/>
+    <ellipse cx="0" cy="-10" rx="24" ry="22" fill="url(#eye)"/>
+    <circle cx="-8" cy="-18" r="7" fill="#fff"/>
+    <!-- mejillas y sonrisa -->
+    <path d="M-20,48 Q0,62 20,48" stroke="#1e2b3d" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <ellipse cx="-52" cy="-62" rx="20" ry="11" fill="#fff" opacity="0.85" transform="rotate(-30 -52 -62)"/>
+  </g>
+  <!-- Bastón: vertical, centrado, de y=-300 a y=300 -->
+  <g id="baston">
+    <rect x="-16" y="-250" width="32" height="540" rx="14" fill="url(#shaft)" stroke="#1e2b3d" stroke-width="8"/>
+    <rect x="-24" y="-120" width="48" height="26" rx="8" fill="#fad25a" stroke="#1e2b3d" stroke-width="6"/>
+    <rect x="-24" y="60" width="48" height="26" rx="8" fill="#fad25a" stroke="#1e2b3d" stroke-width="6"/>
+    <rect x="-24" y="200" width="48" height="26" rx="8" fill="#fad25a" stroke="#1e2b3d" stroke-width="6"/>
+    <path d="M-14,-245 L-46,-300 M14,-245 L46,-300" stroke="#1e2b3d" stroke-width="22" stroke-linecap="round"/>
+    <path d="M-14,-245 L-46,-300 M14,-245 L46,-300" stroke="#fad25a" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="0" cy="-330" r="80" fill="url(#glow)"/>
+    <path d="M0,-400 L40,-330 L0,-262 L-40,-330 Z" fill="url(#crys)" stroke="#1e2b3d" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M0,-385 L14,-335 L0,-300 Z" fill="#fff" opacity="0.7"/>
+  </g>
+  <g id="gema">
+    <path d="M0,-34 L24,0 L0,34 L-24,0 Z" fill="url(#crys)" stroke="#1e2b3d" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M0,-24 L9,-2 L0,10 Z" fill="#fff" opacity="0.8"/>
+  </g>
+  <g id="palma">
+    <path d="M0,0 C10,-80 -10,-160 20,-240" stroke="#1e2b3d" stroke-width="30" fill="none" stroke-linecap="round"/>
+    <path d="M0,0 C10,-80 -10,-160 20,-240" stroke="#b07a46" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <g fill="#3fbf5a" stroke="#1e2b3d" stroke-width="6" stroke-linejoin="round">
+      <path d="M20,-240 C-40,-280 -110,-250 -140,-200 C-80,-235 -30,-235 20,-240 Z"/>
+      <path d="M20,-240 C80,-290 150,-270 180,-215 C120,-245 70,-245 20,-240 Z"/>
+      <path d="M20,-240 C-20,-310 30,-350 70,-345 C40,-310 30,-280 20,-240 Z"/>
+      <path d="M20,-240 C-50,-260 -90,-300 -80,-330 C-40,-300 -10,-270 20,-240 Z"/>
+    </g>
+    <circle cx="10" cy="-232" r="12" fill="#7a4a22" stroke="#1e2b3d" stroke-width="5"/>
+    <circle cx="32" cy="-228" r="12" fill="#7a4a22" stroke="#1e2b3d" stroke-width="5"/>
+  </g>
+  <!-- Rastreador del Óxido -->
+  <g id="rastreador">
+    <ellipse cx="0" cy="62" rx="70" ry="12" fill="#000" opacity="0.2"/>
+    <rect x="-56" y="-30" width="112" height="80" rx="18" fill="#c06a32" stroke="#1e2b3d" stroke-width="7"/>
+    <rect x="-56" y="-30" width="112" height="26" rx="12" fill="#8a4a24" stroke="#1e2b3d" stroke-width="7"/>
+    <circle cx="-30" cy="18" r="6" fill="#5a2e14"/><circle cx="34" cy="30" r="5" fill="#5a2e14"/>
+    <circle cx="20" cy="12" r="17" fill="#1e2b3d"/><circle cx="20" cy="12" r="11" fill="#ff3b30"/>
+    <circle cx="16" cy="8" r="4" fill="#fff"/>
+    <path d="M-40,50 L-50,66 M0,50 L0,68 M40,50 L50,66" stroke="#1e2b3d" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-20,-30 L-30,-58 M-30,-58 L-14,-62" stroke="#1e2b3d" stroke-width="7" stroke-linecap="round"/>
+  </g>
+</defs>
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a9cf0"/><stop offset="0.7" stop-color="#8fd8ff"/><stop offset="1" stop-color="#d6f3ff"/></linearGradient>
+ <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2ec4d8"/><stop offset="1" stop-color="#1688b8"/></linearGradient>
+ <radialGradient id="portal" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#eaffd8"/><stop offset="0.55" stop-color="#7cf06a"/><stop offset="1" stop-color="#2fa83a"/></radialGradient>
+ <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fffbe0"/><stop offset="0.5" stop-color="#ffe680"/><stop offset="1" stop-color="#ffe680" stop-opacity="0"/></radialGradient>
+ <linearGradient id="title" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6b0"/><stop offset="0.55" stop-color="#ffc533"/><stop offset="1" stop-color="#ff8a1c"/></linearGradient>
+ <linearGradient id="volcan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a5a6a"/><stop offset="1" stop-color="#5a3a52"/></linearGradient>
+</defs>
+<rect width="1920" height="1080" fill="url(#sky)"/>
+<circle cx="1640" cy="190" r="220" fill="url(#sun)"/>
+<g fill="#fff" opacity="0.95" stroke="#bfe6ff" stroke-width="4">
+ <path d="M180,250 q30,-60 90,-40 q30,-50 90,-10 q60,-10 60,50 q30,30 -20,40 h-200 q-50,-10 -20,-40 z"/>
+ <path d="M1180,140 q30,-50 80,-30 q30,-40 80,0 q50,0 40,40 q20,30 -20,30 h-160 q-40,-10 -20,-40 z"/>
+</g>
+<!-- islas lejanas -->
+<path d="M1300,640 L1430,430 L1470,470 L1520,420 L1640,640 Z" fill="url(#volcan)" stroke="#1e2b3d" stroke-width="6" stroke-linejoin="round"/>
+<path d="M1430,430 L1470,470 L1520,420 L1500,470 L1460,500 Z" fill="#ff7a2a"/>
+<g fill="#c9c2c6" opacity="0.8"><circle cx="1478" cy="390" r="22"/><circle cx="1500" cy="350" r="28"/><circle cx="1530" cy="305" r="34"/></g>
+<path d="M1680,640 L1740,520 L1790,560 L1840,500 L1920,640 Z" fill="#dff4ff" stroke="#1e2b3d" stroke-width="6" stroke-linejoin="round"/>
+<g transform="translate(1110,360)"><rect x="-70" y="40" width="140" height="70" fill="#d9c7a0" stroke="#1e2b3d" stroke-width="5"/><rect x="-50" y="-10" width="30" height="60" fill="#e8d9b6" stroke="#1e2b3d" stroke-width="5"/><rect x="20" y="-30" width="30" height="80" fill="#e8d9b6" stroke="#1e2b3d" stroke-width="5"/><ellipse cx="0" cy="115" rx="120" ry="22" fill="#fff" opacity="0.9"/></g>
+<rect y="600" width="1920" height="480" fill="url(#sea)"/>
+<g stroke="#bff6ff" stroke-width="6" stroke-linecap="round" opacity="0.7" fill="none">
+ <path d="M80,700 q30,-14 60,0 q30,14 60,0"/><path d="M1500,720 q30,-14 60,0 q30,14 60,0"/><path d="M1700,860 q30,-14 60,0 q30,14 60,0"/>
+</g>
+<!-- isla principal -->
+<path d="M-60,1080 L-60,760 Q300,640 900,690 Q1400,720 1560,860 Q1620,960 1600,1080 Z" fill="#f5d98c" stroke="#1e2b3d" stroke-width="8"/>
+<path d="M-60,1080 L-60,800 Q320,700 880,740 Q1340,770 1480,880 Q1530,960 1520,1080 Z" fill="#4fcf62" stroke="#1e2b3d" stroke-width="8"/>
+<path d="M-60,1080 L-60,880 Q400,800 900,840 Q1300,870 1420,960 L1440,1080 Z" fill="#3cb352"/>
+<!-- portal -->
+<g transform="translate(1250,720)">
+ <ellipse cx="0" cy="130" rx="160" ry="30" fill="#000" opacity="0.18"/>
+ <path d="M-140,130 L-140,-60 A140,140 0 0 1 140,-60 L140,130" fill="none" stroke="#1e2b3d" stroke-width="58"/>
+ <path d="M-140,130 L-140,-60 A140,140 0 0 1 140,-60 L140,130" fill="none" stroke="#9a8a78" stroke-width="44"/>
+ <path d="M-112,130 L-112,-60 A112,112 0 0 1 112,-60 L112,130 Z" fill="url(#portal)"/>
+ <circle cx="0" cy="-60" r="22" fill="#eaffd8" opacity="0.8"/>
+ <g fill="#7cf06a" stroke="#1e2b3d" stroke-width="4"><circle cx="-140" cy="-60" r="14"/><circle cx="140" cy="-60" r="14"/><circle cx="0" cy="-200" r="16"/></g>
+</g>
+<g transform="translate(150,860) scale(1.25)"><use href="#palma"/></g>
+<g transform="translate(470,790) scale(0.9) scale(-1,1)"><use href="#palma"/></g>
+<g transform="translate(1520,900) scale(1.1) scale(-1,1)"><use href="#palma"/></g>
+<!-- enemigos -->
+<g transform="translate(1600,960) scale(1.1) scale(-1,1)"><use href="#rastreador"/></g>
+<g transform="translate(1000,830) scale(0.75) scale(-1,1)"><use href="#rastreador"/></g>
+<!-- rayito de Chispa -->
+<path d="M800,600 L1000,800" stroke="#8ff0ff" stroke-width="22" stroke-linecap="round" opacity="0.5"/>
+<path d="M800,600 L1000,800" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+<circle cx="1000" cy="800" r="40" fill="url(#glow)"/>
+<!-- bastón y Chispa -->
+<g transform="translate(440,720) rotate(-18) scale(0.92)"><use href="#baston"/></g>
+<g transform="translate(720,580) rotate(-8) scale(1.45)"><use href="#chispa"/></g>
+<!-- cristales -->
+<g transform="translate(300,600) rotate(-14) scale(1.2)"><use href="#gema"/></g>
+<g transform="translate(980,560) rotate(12) scale(0.9)"><use href="#gema"/></g>
+<g transform="translate(260,960) rotate(8) scale(1.1)"><use href="#gema"/></g>
+<g transform="translate(900,1000) rotate(-8) scale(1)"><use href="#gema"/></g>
+<!-- título -->
+<g class="t" text-anchor="middle">
+ <text x="960" y="200" font-size="170" fill="#1e2b3d" stroke="#1e2b3d" stroke-width="34" stroke-linejoin="round">EXPEDICIÓN CERO</text>
+ <text x="960" y="200" font-size="170" fill="url(#title)">EXPEDICIÓN CERO</text>
+ <g transform="translate(960,262)">
+  <rect x="-500" y="-48" width="1000" height="76" rx="38" fill="#1e2b3d"/>
+  <text x="0" y="8" font-size="44" fill="#8ff0ff" letter-spacing="2">AVENTURA CON TU DRON · 1-4 JUGADORES</text>
+ </g>
+</g>
+</svg></body></html>
