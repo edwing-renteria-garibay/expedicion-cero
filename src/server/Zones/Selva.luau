@@ -114,7 +114,7 @@ local function wall(parent: Instance, x1: number, z1: number, x2: number, z2: nu
 end
 
 -- Un letrero que flota sobre una pieza
-local function label(target: BasePart, text: string, offset: number, color: Color3?)
+local function signOn(target: BasePart, text: string, offset: number, color: Color3?)
 	local gui = Instance.new("BillboardGui")
 	gui.Size = UDim2.fromOffset(200, 40)
 	gui.StudsOffsetWorldSpace = Vector3.new(0, offset, 0)
@@ -157,7 +157,7 @@ local function crossWall(
 	wall(parent, -halfWidth, z, -4, z)
 	wall(parent, 4, z, halfWidth, z)
 	local d = door(parent, doorId, 0, z)
-	label(d, howTo, -H / 2 + 9, Color3.fromRGB(255, 230, 140))
+	signOn(d, howTo, -H / 2 + 9, Color3.fromRGB(255, 230, 140))
 	return d
 end
 
@@ -184,7 +184,7 @@ local function plate(parent: Instance, doorId: string, x: number, z: number, sec
 	light.Range = 12
 	light.Brightness = 1.5
 	light.Parent = p
-	label(p, "▼ PLACA ▼", 4, Color3.fromRGB(255, 220, 90))
+	signOn(p, "▼ PLACA ▼", 4, Color3.fromRGB(255, 220, 90))
 	p:SetAttribute("Puerta", doorId)
 	if seconds then
 		p:SetAttribute("Tiempo", seconds)
