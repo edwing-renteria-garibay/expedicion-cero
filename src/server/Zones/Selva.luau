@@ -113,6 +113,24 @@ local function wall(parent: Instance, x1: number, z1: number, x2: number, z2: nu
 	})
 end
 
+-- Un letrero que flota sobre una pieza
+local function label(target: BasePart, text: string, offset: number, color: Color3?)
+	local gui = Instance.new("BillboardGui")
+	gui.Size = UDim2.fromOffset(200, 40)
+	gui.StudsOffsetWorldSpace = Vector3.new(0, offset, 0)
+	gui.MaxDistance = 60
+	gui.Parent = target
+	local text_ = Instance.new("TextLabel")
+	text_.BackgroundTransparency = 1
+	text_.Size = UDim2.fromScale(1, 1)
+	text_.Font = Enum.Font.FredokaOne
+	text_.Text = text
+	text_.TextScaled = true
+	text_.TextColor3 = color or Color3.new(1, 1, 1)
+	text_.TextStrokeTransparency = 0.3
+	text_.Parent = gui
+end
+
 local function door(parent: Instance, id: string, x: number, z: number): BasePart
 	local d = part(parent, {
 		Name = "Puerta",
@@ -128,21 +146,45 @@ local function door(parent: Instance, id: string, x: number, z: number): BasePar
 end
 
 -- Una pared que atraviesa el templo en "z", con un hueco de 8 en medio para la puerta
-local function crossWall(parent: Instance, z: number, halfWidth: number, doorId: string): BasePart
+-- (howTo = qué hay que hacer para abrirla; sale escrito en la puerta)
+local function crossWall(
+	parent: Instance,
+	z: number,
+	halfWidth: number,
+	doorId: string,
+	howTo: string
+): BasePart
 	wall(parent, -halfWidth, z, -4, z)
 	wall(parent, 4, z, halfWidth, z)
-	return door(parent, doorId, 0, z)
+	local d = door(parent, doorId, 0, z)
+	label(d, howTo, -H / 2 + 9, Color3.fromRGB(255, 230, 140))
+	return d
 end
 
 local function plate(parent: Instance, doorId: string, x: number, z: number, seconds: number?)
+	-- Un marco de piedra oscura alrededor, para que se note en el piso
+	part(parent, {
+		Name = "MarcoPlaca",
+		Size = Vector3.new(8.5, 0.5, 8.5),
+		Position = at(x, z, 0.45),
+		Color = Color3.fromRGB(50, 56, 50),
+		Material = Enum.Material.Slate,
+		CanCollide = false,
+	})
 	local p = part(parent, {
 		Name = "Placa",
-		Size = Vector3.new(6.5, 0.4, 6.5),
-		Position = at(x, z, 0.45),
+		Size = Vector3.new(6.5, 0.8, 6.5),
+		Position = at(x, z, 0.6),
 		Color = Color3.fromRGB(240, 200, 70),
 		Material = Enum.Material.Neon,
 		CanCollide = false,
 	})
+	local light = Instance.new("PointLight")
+	light.Color = p.Color
+	light.Range = 12
+	light.Brightness = 1.5
+	light.Parent = p
+	label(p, "▼ PLACA ▼", 4, Color3.fromRGB(255, 220, 90))
 	p:SetAttribute("Puerta", doorId)
 	if seconds then
 		p:SetAttribute("Tiempo", seconds)
@@ -221,6 +263,12 @@ local function land()
 		Enum.Material.Grass
 	)
 	terrain:FillBlock(CFrame.new(S + Vector3.new(0, -3, -10)), Vector3.new(16, 10, 150), Enum.Material.Mud)
+	-- Bajo el templo, piedra en vez de pasto (el pasto tapaba las placas del piso)
+	terrain:FillBlock(
+		CFrame.new(S + Vector3.new(0, -3, -220)),
+		Vector3.new(108, 10, 290),
+		Enum.Material.Slate
+	)
 	-- Paredes de roca: no se puede salir de la selva
 	terrain:FillBlock(
 		CFrame.new(S + Vector3.new(-125, 20, -150)),
@@ -335,10 +383,10 @@ local function buildTemple()
 	wall(folder, -30, -80, -6, -80)
 	wall(folder, 6, -80, 30, -80)
 	-- Paredes entre salas, con su puerta
-	crossWall(folder, -130, 30, "SelvaSala1")
-	crossWall(folder, -180, 30, "SelvaPlaca")
-	crossWall(folder, -230, 30, "SelvaBloque")
-	local bossDoor = crossWall(folder, -280, 50, "SelvaJefe")
+	crossWall(folder, -130, 30, "SelvaSala1", "Rompe todas las máquinas")
+	crossWall(folder, -180, 30, "SelvaPlaca", "Pisa la placa amarilla")
+	crossWall(folder, -230, 30, "SelvaBloque", "Pon el bloque en la placa")
+	local bossDoor = crossWall(folder, -280, 50, "SelvaJefe", "Necesitas la llave")
 	-- La arena del jefe
 	wall(folder, -50, -280, -50, -360)
 	wall(folder, 50, -280, 50, -360)
