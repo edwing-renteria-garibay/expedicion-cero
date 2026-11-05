@@ -30,7 +30,15 @@ local COOLDOWN = 5 -- segundos entre pedidos de un mismo jugador
 local CODE_LIFETIME = 6 * 60 * 60 -- lo que dura un código guardado...
 local CODE_REFRESH = 30 * 60 -- ...y cada cuánto se renueva mientras la sala siga abierta
 
-local roomCodes = MemoryStoreService:GetSortedMap("SalasExpedicionCero")
+-- En Studio, con el juego sin publicar, MemoryStoreService no existe: sin esto el servidor
+-- entero dejaba de cargar. Ahí las salas simplemente no funcionan.
+local mapOk, mapResult = pcall(function()
+	return MemoryStoreService:GetSortedMap("SalasExpedicionCero")
+end)
+local roomCodes: any = if mapOk then mapResult else nil
+if not mapOk then
+	warn("[Salas] Sin MemoryStore (¿juego sin publicar?). Las salas no funcionarán aquí.")
+end
 
 local RoomService = {}
 
@@ -72,6 +80,9 @@ end
 
 -- Le da a esta sala un código de 6 números libre y lo renueva mientras siga abierta
 local function registerRoomCode(accessCode: string)
+	if not roomCodes then
+		return
+	end
 	for _ = 1, 10 do
 		local candidate = string.format("%06d", math.random(0, 999999))
 		local ok, free = pcall(function()
@@ -133,6 +144,10 @@ local function onJoin(player: Player, roomCode: any)
 	end
 	if roomCode == ReplicatedStorage:GetAttribute("RoomCode") then
 		roomRemote:FireClient(player, "error", "Ya estás en esa sala.")
+		return
+	end
+	if not roomCodes then
+		roomRemote:FireClient(player, "error", "Las salas solo funcionan en el juego publicado.")
 		return
 	end
 	local ok, accessCode = pcall(roomCodes.GetAsync, roomCodes, roomCode)

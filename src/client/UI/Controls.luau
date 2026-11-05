@@ -36,7 +36,7 @@ function Controls.Start()
 	gui.Parent = player:WaitForChild("PlayerGui")
 	local label = Instance.new("TextLabel")
 	label.AnchorPoint = Vector2.new(0, 1)
-	label.Position = UDim2.new(0, 14, 1, -14)
+	label.Position = UDim2.new(0, 14, 1, -70) -- arriba de los botones TIENDA, TALLER y SALAS
 	label.Size = UDim2.fromOffset(280, 0)
 	label.AutomaticSize = Enum.AutomaticSize.Y
 	label.BackgroundColor3 = Color3.fromRGB(24, 36, 54)
