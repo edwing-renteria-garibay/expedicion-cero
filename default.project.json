@@ -1,0 +1,86 @@
+{
+  "name": "expedicion-cero",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "Shared": {
+        "$path": "src/shared"
+      },
+      "Remotes": {
+        "$className": "Folder",
+        "Attack": {
+          "$className": "RemoteEvent"
+        },
+        "Dodge": {
+          "$className": "RemoteEvent"
+        },
+        "Fx": {
+          "$className": "RemoteEvent"
+        }
+      }
+    },
+    "Lighting": {
+      "$properties": {
+        "Technology": "ShadowMap",
+        "Brightness": 2.4,
+        "ClockTime": 14.5,
+        "GlobalShadows": true,
+        "EnvironmentDiffuseScale": 0.6,
+        "EnvironmentSpecularScale": 0.4,
+        "Ambient": [0.36, 0.36, 0.42],
+        "OutdoorAmbient": [0.55, 0.55, 0.6]
+      },
+      "Atmosphere": {
+        "$className": "Atmosphere",
+        "$properties": {
+          "Density": 0.25,
+          "Offset": 0.2,
+          "Haze": 0.6,
+          "Glare": 0.2,
+          "Color": [0.78, 0.88, 1],
+          "Decay": [0.6, 0.75, 0.95]
+        }
+      },
+      "Sky": {
+        "$className": "Sky",
+        "$properties": {
+          "SunAngularSize": 16
+        }
+      },
+      "Colores": {
+        "$className": "ColorCorrectionEffect",
+        "$properties": {
+          "Saturation": 0.22,
+          "Contrast": 0.08,
+          "Brightness": 0.02
+        }
+      },
+      "Brillo": {
+        "$className": "BloomEffect",
+        "$properties": {
+          "Intensity": 0.5,
+          "Size": 24,
+          "Threshold": 1.6
+        }
+      }
+    },
+    "ServerScriptService": {
+      "Server": {
+        "$path": "src/server"
+      }
+    },
+    "StarterPlayer": {
+      "$properties": {
+        "EnableMouseLockOption": false,
+        "CameraMinZoomDistance": 8,
+        "CameraMaxZoomDistance": 32,
+        "CharacterWalkSpeed": 20
+      },
+      "StarterPlayerScripts": {
+        "Client": {
+          "$path": "src/client"
+        }
+      }
+    }
+  }
+}
