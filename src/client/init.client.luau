@@ -1,6 +1,6 @@
 -- Punto de entrada del cliente: el bastón (golpes, combo y giro), rodar, fijar objetivo,
--- Chispa (el dron que te sigue, habla y escanea), los efectos de los golpes y la lista de
--- controles.
+-- Chispa (el dron que te sigue, habla y escanea), los efectos, tus corazones y cristales, la
+-- lista de controles y los botones de celular.
 
 local Chispa = require(script.Chispa)
 local Dodge = require(script.Dodge)
@@ -9,6 +9,8 @@ local Fx = require(script.Fx)
 local LockOn = require(script.LockOn)
 local Staff = require(script.Staff)
 local ControlsUI = require(script.UI.Controls)
+local HUD = require(script.UI.HUD)
+local TouchButtons = require(script.UI.TouchButtons)
 
 -- Cada parte arranca por separado: si una falla (sale en rojo en Output), las demás siguen
 local parts = {
@@ -19,6 +21,8 @@ local parts = {
 	Chispa,
 	Fx,
 	ControlsUI,
+	HUD,
+	TouchButtons,
 }
 for _, part in parts do
 	task.spawn(function()

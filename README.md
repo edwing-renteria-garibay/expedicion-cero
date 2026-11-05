@@ -7,7 +7,7 @@ de Escuadrón Cero y Frecuencia Cero.
 
 Documento de diseño: https://claude.ai/artifact/GYB3zhAxfYH2UVzHY8XDz4
 
-## Qué hay (semana 1)
+## Qué hay
 
 - **Puerto Eco**, la isla central en estilo caricatura: mar, playa, palmeras, la plaza con el
   pedestal vacío de los núcleos, cuatro portales apagados (Selva Brumosa, Volcán Brasa, Glaciar
@@ -26,10 +26,26 @@ Documento de diseño: https://claude.ai/artifact/GYB3zhAxfYH2UVzHY8XDz4
   - **R**: escanea y marca a los enemigos cercanos a través de las paredes
   - le dispara un rayito a lo que golpeas
   - frases y números en `src/shared/Config/Drone.luau`
+- **Máquinas del Óxido** en la **Chatarrería** (al suroeste de la plaza) (`src/server/Services/EnemyService.luau`, números en `src/shared/Config/Enemies.luau`):
+  - **Rastreador**: chico y rápido, te persigue y muerde
+  - **Escudero**: grande y con escudo; de frente tus golpes rebotan. Pégale por la espalda o
+    usa el remate o el giro
+  - **Torreta**: no camina; dispara bolas de óxido lentas que puedes esquivar
+  - Antes de atacar, su ojo se pone **rojo**: es tu momento para rodar
+  - Al romperse sueltan **cristales** y a veces un **corazón**, que se van hacia ti solos
+- **Corazones** (arriba a la izquierda) en vez de barra de vida: empiezas con 3, no se curan
+  solos (`src/server/Services/HealthService.luau`, `src/shared/Config/Settings.luau`)
+- **Cofres escondidos**: 4 en la isla, cada uno se abre una vez por jugador. El de la
+  chatarrería da un corazón más. Chispa los marca en dorado al escanear
+  (`src/server/Services/ChestService.luau`)
+- **Guardado**: cristales, corazones y cofres abiertos (en Studio no se guarda nada)
+  (`src/server/Services/DataService.luau`)
 - Con control: R2 golpear, B rodar, R3 fijar, Y escanear
+- En celular: botones GOLPEAR (déjalo apretado para el giro), Rodar, Fijar y Escanear junto
+  al de saltar (`src/client/UI/TouchButtons.luau`)
 - Sonidos vacíos en `src/shared/Config/Sounds.luau`, para que pongas los que te gusten
 
-Lo que sigue (semana 2): enemigos del Óxido, cristales, corazones, guardado y botones de celular.
+Lo que sigue (semana 3): la Selva Brumosa completa, con puzzles, mazmorra, jefe y el poder de Empuje.
 
 ## Cómo probarlo
 

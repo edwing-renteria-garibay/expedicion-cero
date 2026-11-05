@@ -40,6 +40,13 @@ Drone.lines = {
 	EscaneoAlgo = "Veo %d objetivos. Los marqué para ti.",
 	EscaneoEspera = "Dame un segundo, me estoy recargando.",
 	Muneco = "¡Muñeco roto! Vuelve a armarse en un momento.",
+	Chatarra = "¡Cuidado, máquinas del Óxido! Cuando su ojo se ponga rojo, rueda con Shift.",
+	Escudo = "¡Rebotó en el escudo! Pégale por la espalda o usa el remate o el giro.",
+	CofreVacio = "Este cofre ya lo abrimos. Vacío.",
+	Cofre = "¡Un cofre! +%d cristales.",
+	CofreCorazon = "¡Un contenedor de corazón! Ahora tienes un corazón más.",
+	Caida = "¡Auch! Te traigo de vuelta a Puerto Eco.",
+	Secretos = "Marqué %d cofres escondidos en dorado.",
 }
 
 return Drone

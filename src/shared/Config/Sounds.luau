@@ -13,4 +13,10 @@ return {
 	zap = 0, -- el rayito de Chispa
 	chispa = 0, -- cuando Chispa habla
 	scan = 0, -- el escaneo
+	hurt = 0, -- cuando te pegan
+	crystal = 0, -- recoger un cristal
+	heart = 0, -- recoger un corazón
+	chest = 0, -- abrir un cofre
+	block = 0, -- tu golpe rebota en un escudo
+	breakEnemy = 0, -- una máquina del Óxido se rompe
 }

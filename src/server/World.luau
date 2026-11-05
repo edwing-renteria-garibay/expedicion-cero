@@ -39,6 +39,24 @@ local PORTALS = {
 	{ key = "Ruinas", name = "Ruinas del Cielo", color = Color3.fromRGB(190, 120, 255), x = 75 },
 }
 
+-- La chatarrería del Óxido, donde salen las máquinas (EnemyService)
+local SCRAPYARD = Vector3.new(-80, GROUND, 80)
+
+-- Los cofres escondidos (ChestService): cada jugador puede abrir cada uno una vez.
+-- reward = cristales que da; heart = true si da un corazón más
+local CHESTS = {
+	{ name = "CofrePalmeras", position = Vector3.new(118, GROUND, -46), reward = 25 },
+	{ name = "CofreFaro", position = Vector3.new(-124, GROUND, -30), reward = 25 },
+	{ name = "CofrePlaya", position = Vector3.new(46, GROUND, 132), reward = 25 },
+	{
+		name = "CofreChatarra",
+		position = SCRAPYARD + Vector3.new(-14, 0, 18),
+		reward = 40,
+		heart = true,
+		big = true,
+	},
+}
+
 local folder: Folder
 
 -- Crea una pieza fija con estas propiedades
@@ -415,6 +433,14 @@ local function decorate()
 		if math.abs(p.X) < 40 and p.Z > 70 and p.Z < 125 then
 			return false -- campo de práctica
 		end
+		if (p - SCRAPYARD).Magnitude < 40 then
+			return false -- chatarrería
+		end
+		for _, chest in CHESTS do
+			if (p - chest.position).Magnitude < 8 then
+				return false -- cofres
+			end
+		end
 		return true
 	end
 	local placed = 0
@@ -476,6 +502,107 @@ local function trainingField()
 	hint("Giro", center, 16)
 end
 
+-- La chatarrería: un claro de tierra con montones de chatarra oxidada y tubos, donde
+-- patrullan las máquinas del Óxido
+local function scrapyard()
+	local rng = Random.new(77)
+	part({
+		Name = "Tierra",
+		Shape = Enum.PartType.Cylinder,
+		Size = Vector3.new(0.3, 64, 64),
+		CFrame = CFrame.new(SCRAPYARD + Vector3.new(0, 0.1, 0)) * CFrame.Angles(0, 0, math.rad(90)),
+		Color = Color3.fromRGB(150, 112, 80),
+		CanCollide = false,
+	})
+	local rust = { Color3.fromRGB(176, 92, 48), Color3.fromRGB(140, 80, 56), Color3.fromRGB(110, 104, 98) }
+	for i = 1, 14 do
+		local angle = rng:NextNumber(0, math.pi * 2)
+		local distance = rng:NextNumber(14, 30)
+		local position = SCRAPYARD + Vector3.new(math.cos(angle) * distance, 0, math.sin(angle) * distance)
+		local size = Vector3.new(rng:NextNumber(3, 7), rng:NextNumber(2, 5), rng:NextNumber(3, 7))
+		part({
+			Name = "Chatarra",
+			Size = size,
+			CFrame = CFrame.new(position + Vector3.new(0, size.Y / 2 - 0.4, 0)) * CFrame.Angles(
+				rng:NextNumber(-0.3, 0.3),
+				rng:NextNumber(0, math.pi),
+				rng:NextNumber(-0.3, 0.3)
+			),
+			Color = rust[(i % #rust) + 1],
+			Material = Enum.Material.CorrodedMetal,
+		})
+	end
+	-- Tubos tirados
+	for i = 1, 4 do
+		local angle = i * 1.6
+		part({
+			Name = "Tubo",
+			Shape = Enum.PartType.Cylinder,
+			Size = Vector3.new(10, 2.4, 2.4),
+			CFrame = CFrame.new(SCRAPYARD + Vector3.new(math.cos(angle) * 8, 1.2, math.sin(angle) * 8))
+				* CFrame.Angles(0, angle, 0),
+			Color = Color3.fromRGB(120, 124, 130),
+			Material = Enum.Material.CorrodedMetal,
+		})
+	end
+	local board = part({
+		Name = "Letrero",
+		Size = Vector3.new(12, 3, 0.6),
+		CFrame = CFrame.lookAt(SCRAPYARD + Vector3.new(26, 6, -26), Vector3.new(0, GROUND + 6, 0)),
+		Color = C.wood,
+	})
+	sign(board, "Chatarrería", "Máquinas del Óxido", Color3.fromRGB(255, 150, 80))
+	hint("Chatarra", SCRAPYARD, 34)
+end
+
+-- Un cofre de madera con tapa y bandas doradas. ChestService le pone el aviso para abrirlo.
+local function chest(info)
+	local scale = if info.big then 1.5 else 1
+	local model = Instance.new("Model")
+	model.Name = info.name
+	local look = CFrame.lookAt(info.position, Vector3.new(0, GROUND, 0))
+	local base = part({
+		Name = "Caja",
+		Size = Vector3.new(3, 2, 2) * scale,
+		CFrame = look * CFrame.new(0, 1 * scale, 0),
+		Color = C.wood,
+		Parent = model,
+	})
+	part({
+		Name = "Tapa",
+		Size = Vector3.new(3.1, 0.8, 2.1) * scale,
+		CFrame = look * CFrame.new(0, 2.4 * scale, 0),
+		Color = C.woodDark,
+		Parent = model,
+	})
+	for _, x in { -1, 1 } do
+		part({
+			Name = "Banda",
+			Size = Vector3.new(0.3, 2.9, 2.2) * scale,
+			CFrame = look * CFrame.new(x * 1 * scale, 1.45 * scale, 0),
+			Color = Color3.fromRGB(250, 200, 70),
+			Parent = model,
+		})
+	end
+	model.PrimaryPart = base
+	model:SetAttribute("Cofre", info.name)
+	model:SetAttribute("Premio", info.reward)
+	model:SetAttribute("Corazon", info.heart == true)
+	CollectionService:AddTag(model, "Cofre")
+	CollectionService:AddTag(model, "Secreto") -- Chispa lo marca al escanear
+	model.Parent = folder
+end
+
+-- Dónde salen las máquinas del Óxido (EnemyService)
+World.enemySpots = {
+	{ kind = "Rastreador", position = SCRAPYARD + Vector3.new(10, 0, -6) },
+	{ kind = "Rastreador", position = SCRAPYARD + Vector3.new(-8, 0, -10) },
+	{ kind = "Rastreador", position = SCRAPYARD + Vector3.new(4, 0, 14) },
+	{ kind = "Escudero", position = SCRAPYARD + Vector3.new(-10, 0, 8) },
+	{ kind = "Torreta", position = SCRAPYARD + Vector3.new(-22, 0, -14) },
+	{ kind = "Torreta", position = SCRAPYARD + Vector3.new(18, 0, 22) },
+}
+
 -- Dónde van los muñecos de práctica (los arma Dummies)
 World.dummySpots = {
 	Vector3.new(-16, GROUND, 92),
@@ -513,6 +640,10 @@ function World.Build()
 		"Taller"
 	)
 	trainingField()
+	scrapyard()
+	for _, info in CHESTS do
+		chest(info)
+	end
 	decorate()
 end
 

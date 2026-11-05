@@ -14,6 +14,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Drone = require(ReplicatedStorage.Shared.Config.Drone)
+local Enemies = require(ReplicatedStorage.Shared.Config.Enemies)
 local Staff = require(ReplicatedStorage.Shared.Config.Staff)
 local StaffModel = require(ReplicatedStorage.Shared.StaffModel)
 
@@ -62,23 +63,45 @@ local function targetsOf(origin: Vector3, look: Vector3, attack): { Model }
 	return hits
 end
 
-local function damage(player: Player, enemy: Model, amount: number, push: number, from: Vector3)
+-- ¿El escudo de un Escudero para este golpe? (de frente y sin romper la guardia)
+local function blocked(enemy: Model, root: BasePart, kind: any, from: Vector3): boolean
+	if not enemy:GetAttribute("Escudo") or Enemies.guardBreakers[kind] then
+		return false
+	end
+	local toAttacker = from - root.Position
+	toAttacker = Vector3.new(toAttacker.X, 0, toAttacker.Z)
+	if toAttacker.Magnitude < 0.1 then
+		return false
+	end
+	local facing = Vector3.new(root.CFrame.LookVector.X, 0, root.CFrame.LookVector.Z)
+	return facing.Magnitude > 0.1 and facing.Unit:Dot(toAttacker.Unit) > 0.35
+end
+
+local function damage(player: Player, enemy: Model, attack, kind: any, from: Vector3)
 	local humanoid = enemy:FindFirstChildOfClass("Humanoid")
 	local root = rootOf(enemy)
 	if not humanoid or humanoid.Health <= 0 or not root then
 		return
 	end
-	humanoid:TakeDamage(amount)
+	if blocked(enemy, root, kind, from) then
+		fx:FireAllClients("Block", root.Position + (from - root.Position).Unit * 2)
+		fx:FireClient(player, "Say", "Escudo")
+		return
+	end
+	humanoid:TakeDamage(attack.damage)
 	enemy:SetAttribute("UltimoGolpe", player.UserId)
-	-- Empujón (los muñecos están fijos y no se mueven; los enemigos de verdad sí)
+	enemy:SetAttribute("Aturdido", os.clock() + Enemies.stun)
+	-- Empujón (los muñecos y torretas están fijos y no se mueven; los demás sí)
 	if not root.Anchored then
 		local away = root.Position - from
 		away = Vector3.new(away.X, 0, away.Z)
 		if away.Magnitude > 0.1 then
-			root:ApplyImpulse((away.Unit * push + Vector3.new(0, push * 0.3, 0)) * root.AssemblyMass)
+			root:ApplyImpulse(
+				(away.Unit * attack.push + Vector3.new(0, attack.push * 0.3, 0)) * root.AssemblyMass
+			)
 		end
 	end
-	fx:FireAllClients("Hit", root.Position, amount)
+	fx:FireAllClients("Hit", root.Position, attack.damage)
 end
 
 -- Chispa le dispara un rayito al enemigo (si ya se recargó)
@@ -139,7 +162,7 @@ local function onAttack(player: Player, kind: any, look: any)
 		local origin = root.Position
 		local hits = targetsOf(origin, look, attack)
 		for _, enemy in hits do
-			damage(player, enemy, attack.damage, attack.push, origin)
+			damage(player, enemy, attack, kind, origin)
 		end
 		if hits[1] then
 			droneZap(player, hits[1])

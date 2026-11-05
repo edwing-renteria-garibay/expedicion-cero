@@ -183,10 +183,32 @@ local function scan(_, state: Enum.UserInputState)
 			highlight:Destroy()
 		end)
 	end
+	-- Los cofres escondidos (etiqueta "Secreto") también se marcan, en dorado
+	local secrets = 0
+	for _, secret in CollectionService:GetTagged("Secreto") do
+		local pivot = if secret:IsA("Model") then secret:GetPivot().Position else nil
+		if not pivot or (pivot - root.Position).Magnitude > Drone.scan.range then
+			continue
+		end
+		secrets += 1
+		local highlight = Instance.new("Highlight")
+		highlight.FillColor = Color3.fromRGB(255, 220, 90)
+		highlight.FillTransparency = 0.5
+		highlight.OutlineColor = Color3.fromRGB(255, 220, 90)
+		highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+		highlight.Adornee = secret
+		highlight.Parent = secret
+		task.delay(Drone.scan.duration, function()
+			highlight:Destroy()
+		end)
+	end
 	if found > 0 then
 		Chispa.Say("EscaneoAlgo", found)
-	else
+	elseif secrets == 0 then
 		Chispa.Say("EscaneoNada")
+	end
+	if secrets > 0 then
+		Chispa.Say("Secretos", secrets)
 	end
 	return Enum.ContextActionResult.Sink
 end

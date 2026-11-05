@@ -1,5 +1,5 @@
 -- Una lista chiquita abajo a la izquierda con los controles (en computadora y con control).
--- En celular no sale: los botones táctiles llegan en la semana 2.
+-- En celular no sale: ahí están los botones táctiles (UI/TouchButtons).
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")

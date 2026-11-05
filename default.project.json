@@ -27,8 +27,16 @@
         "GlobalShadows": true,
         "EnvironmentDiffuseScale": 0.6,
         "EnvironmentSpecularScale": 0.4,
-        "Ambient": [0.36, 0.36, 0.42],
-        "OutdoorAmbient": [0.55, 0.55, 0.6]
+        "Ambient": [
+          0.36,
+          0.36,
+          0.42
+        ],
+        "OutdoorAmbient": [
+          0.55,
+          0.55,
+          0.6
+        ]
       },
       "Atmosphere": {
         "$className": "Atmosphere",
@@ -37,8 +45,16 @@
           "Offset": 0.2,
           "Haze": 0.6,
           "Glare": 0.2,
-          "Color": [0.78, 0.88, 1],
-          "Decay": [0.6, 0.75, 0.95]
+          "Color": [
+            0.78,
+            0.88,
+            1
+          ],
+          "Decay": [
+            0.6,
+            0.75,
+            0.95
+          ]
         }
       },
       "Sky": {
@@ -80,6 +96,9 @@
         "Client": {
           "$path": "src/client"
         }
+      },
+      "StarterCharacterScripts": {
+        "$path": "src/character"
       }
     }
   }

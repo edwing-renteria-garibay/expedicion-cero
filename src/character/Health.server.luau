@@ -1,0 +1,3 @@
+-- Este script vacío reemplaza al "Health" de Roblox, que cura al personaje solo con el tiempo.
+-- En Expedición Cero la vida son corazones y solo se recupera recogiendo corazones
+-- (src/server/Services/HealthService.luau).
