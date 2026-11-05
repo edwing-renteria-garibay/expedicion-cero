@@ -356,8 +356,8 @@ local function house(
 		Color = C.wall,
 		Parent = model,
 	})
-	-- Puerta de madera cerrada
-	part({
+	-- Puerta de madera cerrada (con su aviso: abre el menú de la tienda o del taller)
+	local door = part({
 		Name = "Puerta",
 		Size = Vector3.new(8, H - 4, 0.6),
 		CFrame = at(Vector3.new(0, (H - 4) / 2 + 1, -D / 2)),
@@ -385,6 +385,13 @@ local function house(
 	})
 	sign(board, name, subtitle)
 	hint(hintKey, (at(Vector3.new(0, 0, -D / 2 - 6))).Position, 12)
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.ActionText = "Entrar"
+	prompt.ObjectText = name
+	prompt.MaxActivationDistance = 10
+	prompt.RequiresLineOfSight = false
+	prompt:SetAttribute("AbreMenu", hintKey) -- client/UI/Shop abre el menú
+	prompt.Parent = door
 end
 
 -- Una palmera de caricatura
@@ -637,7 +644,7 @@ function World.Build()
 	hint("Portales", Vector3.new(0, GROUND, -80), 14)
 	house(
 		"Tienda",
-		"Próximamente",
+		"Mejoras y cristales",
 		Vector3.new(80, GROUND, 24),
 		Vector3.new(0, GROUND, 0),
 		C.roofRed,
@@ -645,7 +652,7 @@ function World.Build()
 	)
 	house(
 		"Taller de Chispa",
-		"Próximamente",
+		"Mejora a Chispa",
 		Vector3.new(-80, GROUND, 24),
 		Vector3.new(0, GROUND, 0),
 		C.roofBlue,

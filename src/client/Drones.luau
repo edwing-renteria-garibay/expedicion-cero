@@ -13,6 +13,7 @@ local BODY = Color3.fromRGB(240, 244, 250)
 local BAND = Color3.fromRGB(60, 190, 210)
 local EYE = Color3.fromRGB(110, 230, 255)
 local FIN = Color3.fromRGB(250, 170, 60)
+local GOLD = Color3.fromRGB(255, 205, 70) -- con el pase VIP, Chispa es dorado
 
 -- Dónde flota: a la derecha, arriba y un poco atrás del personaje
 local OFFSET = Vector3.new(2.8, 2.6, 1.6)
@@ -87,6 +88,22 @@ local function build(owner: Player): Drone
 		label.TextStrokeTransparency = 0.4
 		label.Parent = gui
 	end
+	-- Con el pase VIP la banda y las aletas son doradas (también si lo compra jugando)
+	local function paint()
+		local vip = owner:GetAttribute("Pass_VIP") == true
+		band.Color = if vip then GOLD else BAND
+		band.Material = if vip then Enum.Material.Glass else Enum.Material.SmoothPlastic
+		for _, child in model:GetChildren() do
+			if child.Name == "Aleta" and child:IsA("BasePart") then
+				child.Color = if vip then GOLD else FIN
+			end
+		end
+	end
+	paint()
+	local connection = owner:GetAttributeChangedSignal("Pass_VIP"):Connect(paint)
+	model.Destroying:Connect(function()
+		connection:Disconnect()
+	end)
 	-- Todas las piezas se mueven juntas desde el cuerpo (que queda en el origen)
 	model:PivotTo(CFrame.new())
 	model.Parent = folder

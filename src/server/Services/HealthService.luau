@@ -29,7 +29,8 @@ function HealthService.Refresh(player: Player, fill: boolean?)
 	if not humanoid or not profile then
 		return
 	end
-	humanoid.MaxHealth = profile.hearts * Settings.hearts.value
+	local hearts = player:GetAttribute("Corazones") or profile.hearts -- incluye el del VIP
+	humanoid.MaxHealth = hearts * Settings.hearts.value
 	if fill then
 		humanoid.Health = humanoid.MaxHealth
 	end

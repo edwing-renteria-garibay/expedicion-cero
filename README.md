@@ -11,7 +11,7 @@ Documento de diseño: https://claude.ai/artifact/GYB3zhAxfYH2UVzHY8XDz4
 
 - **Puerto Eco**, la isla central en estilo caricatura: mar, playa, palmeras, la plaza con el
   pedestal vacío de los núcleos, cuatro portales apagados (Selva Brumosa, Volcán Brasa, Glaciar
-  Silencio, Ruinas del Cielo), la tienda y el taller de Chispa (cerrados por ahora) y el
+  Silencio, Ruinas del Cielo), la tienda y el taller de Chispa y el
   **campo de práctica** con muñecos (`src/server/World.luau`, `src/server/Dummies.luau`)
 - **Bastón de energía** en la mano de cada jugador (`src/shared/StaffModel.luau`):
   - **Clic**: golpe. Tres clics seguidos hacen el combo; el tercero es un remate que pega más
@@ -60,8 +60,26 @@ Documento de diseño: https://claude.ai/artifact/GYB3zhAxfYH2UVzHY8XDz4
 - El **pedestal** de la plaza enciende un hueco por cada núcleo que tengas
 - Puertas, placas, bloques y paredes agrietadas: `src/server/Puzzles.luau`
 
-Lo que sigue: tienda y taller de Chispa (gastar cristales), revivir a un amigo en co-op y la
-segunda isla, el Volcán Brasa.
+- **Tienda** (B, o el aviso de su puerta) y **Taller de Chispa** (T) para gastar cristales
+  (`src/client/UI/Shop.luau`, `src/server/Services/ShopService.luau`, precios en
+  `src/shared/Config/Shop.luau`):
+  - Tienda: **bastón reforzado** (3 niveles, +15% de daño cada uno) y **contenedores de
+    corazón** (2)
+  - Taller: **rayito** más fuerte, **recarga** más rápida, **imán** de cristales y
+    **escáner** de largo alcance
+- **Robux** (pestaña de la tienda, `src/server/Services/StoreService.luau`,
+  `src/shared/Config/Store.luau`): pases **Cristales x2** y **VIP** (Chispa y el bastón
+  dorados, un corazón extra) y bolsas de cristales. Hasta que pongas los números (id), dicen
+  "Pronto"; en Studio sale "Probar" para dártelos gratis
+- **Salas privadas** (botón SALAS, `src/server/Services/RoomService.luau`): crea una sala y
+  pásale el código de 6 números a tus amigos. Tu progreso va contigo. Solo funciona en el juego
+  publicado
+- **Música** por lugar (Puerto Eco, la selva y el jefe) en `src/shared/Config/Music.luau`
+  (0 = sin música) (`src/client/Music.luau`)
+- En celular, la tienda, el taller y las salas están en el botón MENÚ de arriba a la derecha
+
+Lo que sigue: ícono y miniatura, publicar, revivir a un amigo en co-op y la segunda isla, el
+Volcán Brasa.
 
 ## Cómo probarlo
 

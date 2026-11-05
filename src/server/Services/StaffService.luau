@@ -15,6 +15,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Drone = require(ReplicatedStorage.Shared.Config.Drone)
 local Enemies = require(ReplicatedStorage.Shared.Config.Enemies)
+local Shop = require(ReplicatedStorage.Shared.Config.Shop)
 local Staff = require(ReplicatedStorage.Shared.Config.Staff)
 local StaffModel = require(ReplicatedStorage.Shared.StaffModel)
 
@@ -92,7 +93,10 @@ local function damage(player: Player, enemy: Model, attack, kind: any, from: Vec
 		fx:FireClient(player, "Say", if enemy:GetAttribute("Blindado") then "Blindado" else "Escudo")
 		return
 	end
-	humanoid:TakeDamage(attack.damage)
+	-- El bastón reforzado de la tienda pega más
+	local level = player:GetAttribute("Mejora_Baston") or 0
+	local amount = math.floor(attack.damage * (1 + Shop.items.Baston.staffBonus * level) + 0.5)
+	humanoid:TakeDamage(amount)
 	enemy:SetAttribute("UltimoGolpe", player.UserId)
 	enemy:SetAttribute("Aturdido", os.clock() + Enemies.stun)
 	-- Empujón (los muñecos y torretas están fijos y no se mueven; los demás sí)
@@ -105,13 +109,17 @@ local function damage(player: Player, enemy: Model, attack, kind: any, from: Vec
 			)
 		end
 	end
-	fx:FireAllClients("Hit", root.Position, attack.damage)
+	fx:FireAllClients("Hit", root.Position, amount)
 end
 
 -- Chispa le dispara un rayito al enemigo (si ya se recargó)
 local function droneZap(player: Player, enemy: Model)
 	local now = os.clock()
-	if now - (lastZap[player] or 0) < Drone.zap.cooldown then
+	-- Mejoras del taller de Chispa
+	local cooldown = Drone.zap.cooldown
+		- Shop.items.Recarga.cooldownBonus * (player:GetAttribute("Mejora_Recarga") or 0)
+	local zapDamage = Drone.zap.damage + Shop.items.Rayo.zapBonus * (player:GetAttribute("Mejora_Rayo") or 0)
+	if now - (lastZap[player] or 0) < cooldown then
 		return
 	end
 	lastZap[player] = now
@@ -125,8 +133,8 @@ local function droneZap(player: Player, enemy: Model)
 		if enemy:GetAttribute("Blindado") then
 			return -- rebota en la armadura
 		end
-		humanoid:TakeDamage(Drone.zap.damage)
-		fx:FireAllClients("Hit", root.Position, Drone.zap.damage)
+		humanoid:TakeDamage(zapDamage)
+		fx:FireAllClients("Hit", root.Position, zapDamage)
 	end)
 end
 
@@ -216,7 +224,9 @@ local function onCharacter(player: Player, character: Model)
 	if not character.Parent or character:FindFirstChild("Baston") then
 		return
 	end
-	StaffModel.Attach(character, StaffModel.Build())
+	local staff = StaffModel.Build()
+	StaffModel.Paint(staff, player:GetAttribute("Pass_VIP") == true)
+	StaffModel.Attach(character, staff)
 end
 
 function StaffService.Start()
@@ -225,6 +235,13 @@ function StaffService.Start()
 	local function onPlayer(player: Player)
 		player.CharacterAdded:Connect(function(character)
 			onCharacter(player, character)
+		end)
+		-- Si compra el pase VIP jugando, el cristal se vuelve dorado al momento
+		player:GetAttributeChangedSignal("Pass_VIP"):Connect(function()
+			local staff = player.Character and player.Character:FindFirstChild("Baston")
+			if staff then
+				StaffModel.Paint(staff, player:GetAttribute("Pass_VIP") == true)
+			end
 		end)
 		if player.Character then
 			task.spawn(onCharacter, player, player.Character)

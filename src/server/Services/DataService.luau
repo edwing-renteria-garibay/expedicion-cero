@@ -5,6 +5,9 @@
 --   chests   = los cofres que ya abrió: { [nombre] = true }
 --   powers   = los poderes del bastón que ganó: { Empuje = true }
 --   cores    = los núcleos que recuperó: { Selva = true }
+--   upgrades = las mejoras compradas con cristales y su nivel: { Baston = 2, Rayo = 1 }
+--              (Config/Shop); se publican como atributos "Mejora_Baston", ...
+--   receipts = compras con Robux ya entregadas (para no darlas dos veces)
 --
 -- Cuando cambian los cristales o los corazones se ponen como atributos del jugador
 -- ("Cristales", "Corazones", "Nucleos" y uno por poder, como "Empuje"), así la pantalla los ve, y en la tabla de puntos (leaderstats).
@@ -26,6 +29,8 @@ export type Profile = {
 	chests: { [string]: boolean },
 	powers: { [string]: boolean },
 	cores: { [string]: boolean },
+	upgrades: { [string]: number },
+	receipts: { string },
 }
 
 local profiles: { [Player]: Profile } = {}
@@ -66,7 +71,12 @@ local function publish(player: Player)
 		return
 	end
 	player:SetAttribute("Cristales", profile.crystals)
-	player:SetAttribute("Corazones", profile.hearts)
+	-- El pase VIP da un corazón más mientras juegas (no se guarda)
+	local vip = if player:GetAttribute("Pass_VIP") then 1 else 0
+	player:SetAttribute("Corazones", profile.hearts + vip)
+	for key, level in profile.upgrades do
+		player:SetAttribute("Mejora_" .. key, level)
+	end
 	local cores = 0
 	for _ in profile.cores do
 		cores += 1
@@ -96,6 +106,8 @@ function DataService.Load(player: Player)
 		chests = {},
 		powers = {},
 		cores = {},
+		upgrades = {},
+		receipts = {},
 	}
 	if store then
 		local ok, data = pcall(function()
@@ -111,6 +123,8 @@ function DataService.Load(player: Player)
 			profile.chests = if type(data.chests) == "table" then data.chests else {}
 			profile.powers = if type(data.powers) == "table" then data.powers else {}
 			profile.cores = if type(data.cores) == "table" then data.cores else {}
+			profile.upgrades = if type(data.upgrades) == "table" then data.upgrades else {}
+			profile.receipts = if type(data.receipts) == "table" then data.receipts else {}
 		elseif not ok then
 			warn("[Datos] No se pudo leer a", player.Name, data)
 		end
@@ -126,14 +140,61 @@ function DataService.Load(player: Player)
 	publish(player)
 end
 
+-- Vuelve a poner los números en el jugador (por ejemplo, al comprar el pase VIP)
+DataService.Publish = publish
+
+-- Guarda ya (antes de cambiar de servidor o al comprar con Robux). En Studio no hay DataStore:
+-- cuenta como guardado para poder probar.
+function DataService.SaveNow(player: Player): boolean
+	local profile = profiles[player]
+	if not profile then
+		return false
+	end
+	if not store then
+		return true
+	end
+	local ok, err = pcall(function()
+		(store :: DataStore):SetAsync(keyOf(player), profile)
+	end)
+	if not ok then
+		warn("[Datos] No se pudo guardar a", player.Name, err)
+	end
+	return ok
+end
+
+-- Gasta cristales. Devuelve false si no le alcanzan.
+function DataService.Spend(player: Player, amount: number): boolean
+	local profile = profiles[player]
+	if not profile or profile.crystals < amount then
+		return false
+	end
+	profile.crystals -= amount
+	publish(player)
+	return true
+end
+
+-- Sube una mejora un nivel (Config/Shop)
+function DataService.Upgrade(player: Player, key: string)
+	local profile = profiles[player]
+	if not profile then
+		return
+	end
+	profile.upgrades[key] = (profile.upgrades[key] or 0) + 1
+	publish(player)
+end
+
 function DataService.Get(player: Player): Profile?
 	return profiles[player]
 end
 
-function DataService.AddCrystals(player: Player, amount: number)
+function DataService.AddCrystals(player: Player, amount: number, noBonus: boolean?)
 	local profile = profiles[player]
 	if not profile then
 		return
+	end
+	-- Con el pase Cristales x2, lo que ganas vale el doble (no lo que gastas ni lo comprado)
+	if amount > 0 and player:GetAttribute("Pass_x2") and not noBonus then
+		amount *= 2
 	end
 	profile.crystals = math.max(0, profile.crystals + amount)
 	publish(player)

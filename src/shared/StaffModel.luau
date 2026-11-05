@@ -13,6 +13,7 @@ local LENGTH = 6
 local SHAFT = Color3.fromRGB(120, 78, 160)
 local BANDS = Color3.fromRGB(250, 210, 90)
 local CRYSTAL = Color3.fromRGB(110, 230, 255)
+local GOLD = Color3.fromRGB(255, 205, 70) -- el cristal con el pase VIP
 
 -- Dónde se agarra el bastón (un poco abajo de su centro: sobresale más hacia adelante)
 local GRIP = CFrame.new(0, -1.2, 0)
@@ -123,6 +124,23 @@ function StaffModel.Attach(character: Model, staff: BasePart)
 	agarre.Parent = staff
 	staff:SetAttribute("Mano", handOffset)
 	staff.Parent = character
+end
+
+-- Pinta el cristal (y su luz y su estela) de dorado con el pase VIP, o de azul sin él
+function StaffModel.Paint(staff: Instance, vip: boolean)
+	local color = if vip then GOLD else CRYSTAL
+	local crystal = staff:FindFirstChild("Cristal", true)
+	if crystal and crystal:IsA("BasePart") then
+		crystal.Color = color
+		local light = crystal:FindFirstChildOfClass("PointLight")
+		if light then
+			light.Color = color
+		end
+	end
+	local trail = staff:FindFirstChild("Estela", true)
+	if trail and trail:IsA("Trail") then
+		trail.Color = ColorSequence.new(color, Color3.new(1, 1, 1))
+	end
 end
 
 return StaffModel

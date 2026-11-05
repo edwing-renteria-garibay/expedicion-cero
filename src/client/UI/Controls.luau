@@ -15,6 +15,7 @@ local KEYBOARD = {
 	"F: fijar enemigo",
 	"R: Chispa escanea",
 	"E: Empuje (cuando lo tengas)",
+	"B: tienda · T: taller de Chispa",
 }
 
 local GAMEPAD = {

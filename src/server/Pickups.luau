@@ -9,6 +9,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Settings = require(ReplicatedStorage.Shared.Config.Settings)
+local Shop = require(ReplicatedStorage.Shared.Config.Shop)
 local DataService = require(script.Parent.Services.DataService)
 local HealthService = require(script.Parent.Services.HealthService)
 
@@ -77,14 +78,16 @@ function Pickups.Drop(position: Vector3, crystals: number, heart: boolean)
 end
 
 local function nearestPlayer(position: Vector3, range: number): (Player?, BasePart?)
-	local best, bestRoot, bestDistance = nil, nil, range
+	local best, bestRoot, bestDistance = nil, nil, math.huge
 	for _, player in Players:GetPlayers() do
 		local character = player.Character
 		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
 		local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
 		if humanoid and humanoid.Health > 0 and root then
 			local distance = (root.Position - position).Magnitude
-			if distance < bestDistance then
+			-- El imán del taller de Chispa los atrae desde más lejos
+			local reach = range + Shop.items.Iman.magnetBonus * (player:GetAttribute("Mejora_Iman") or 0)
+			if distance < reach and distance < bestDistance then
 				best, bestRoot, bestDistance = player, root, distance
 			end
 		end

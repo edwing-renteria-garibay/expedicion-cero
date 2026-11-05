@@ -17,6 +17,7 @@ local RunService = game:GetService("RunService")
 local Staff = require(ReplicatedStorage.Shared.Config.Staff)
 local Actions = require(script.Parent.Actions)
 local LockOn = require(script.Parent.LockOn)
+local Menus = require(script.Parent.Menus)
 local Sfx = require(script.Parent.Sfx)
 local Swing = require(script.Parent.Swing)
 
@@ -150,7 +151,8 @@ end
 
 local function onAttackInput(_, state: Enum.UserInputState)
 	if state == Enum.UserInputState.Begin then
-		if not alive() then
+		-- Con un menú abierto el clic es para el menú, no para golpear
+		if not alive() or Menus.AnyOpen() then
 			return Enum.ContextActionResult.Pass
 		end
 		holding = true

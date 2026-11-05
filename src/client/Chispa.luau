@@ -11,6 +11,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Drone = require(ReplicatedStorage.Shared.Config.Drone)
+local Shop = require(ReplicatedStorage.Shared.Config.Shop)
 local Actions = require(script.Parent.Actions)
 local Drones = require(script.Parent.Drones)
 local Sfx = require(script.Parent.Sfx)
@@ -160,6 +161,9 @@ local function scan(_, state: Enum.UserInputState)
 		return Enum.ContextActionResult.Sink
 	end
 	lastScan = now
+	-- El escáner de largo alcance del taller llega más lejos
+	local range = Drone.scan.range
+		+ Shop.items.Escaner.scanBonus * (player:GetAttribute("Mejora_Escaner") or 0)
 	Sfx.Play("scan")
 	Drones.Flash(player, SCAN, Drone.scan.duration)
 	local found = 0
@@ -168,7 +172,7 @@ local function scan(_, state: Enum.UserInputState)
 		if not enemy:IsA("Model") or not enemyRoot then
 			continue
 		end
-		if (enemyRoot.Position - root.Position).Magnitude > Drone.scan.range then
+		if (enemyRoot.Position - root.Position).Magnitude > range then
 			continue
 		end
 		found += 1
@@ -187,7 +191,7 @@ local function scan(_, state: Enum.UserInputState)
 	local secrets = 0
 	for _, secret in CollectionService:GetTagged("Secreto") do
 		local pivot = if secret:IsA("Model") then secret:GetPivot().Position else nil
-		if not pivot or (pivot - root.Position).Magnitude > Drone.scan.range then
+		if not pivot or (pivot - root.Position).Magnitude > range then
 			continue
 		end
 		secrets += 1

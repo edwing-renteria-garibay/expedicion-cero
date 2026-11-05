@@ -19,6 +19,15 @@
         },
         "Power": {
           "$className": "RemoteEvent"
+        },
+        "Shop": {
+          "$className": "RemoteEvent"
+        },
+        "Store": {
+          "$className": "RemoteEvent"
+        },
+        "Room": {
+          "$className": "RemoteEvent"
         }
       }
     },
