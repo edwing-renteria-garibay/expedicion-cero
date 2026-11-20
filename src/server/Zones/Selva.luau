@@ -1,4 +1,4 @@
--- La Selva Brumosa: la primera isla, a la que se llega por su portal de Puerto Eco.
+-- La Selva Brumosa: el mundo 1, al que se llega por su portal del Nexo.
 --
 -- Recorrido (de la llegada hacia el norte):
 --   Llegada  -> camino de lodo entre árboles gigantes, con algunas máquinas del Óxido
@@ -7,11 +7,14 @@
 --     Sala 2  placa con tiempo: párate en ella y corre a la puerta antes de que se cierre
 --     Sala 3  gran cofre con el poder de EMPUJE, y un bloque que hay que empujar sobre la placa
 --     Sala 4  pared agrietada (rómpela con Empuje) que esconde la llave del jefe
---     Arena   el Gusano de chatarra gigante (Bosses/Worm). Al romperlo sale el NÚCLEO de la
---             selva y un portal de regreso
+--     Arena   el Gusano de chatarra gigante (Bosses/Worm). Al romperlo suelta cristales y
+--             sale un portal de regreso
 --
 -- El templo se arma de nuevo (con todo cerrado otra vez) cuando nadie ha estado en la selva
--- por un minuto. Lo que ganas (el Empuje, el núcleo) se guarda para siempre.
+-- por un minuto. Lo que ganas (el Empuje) se guarda para siempre.
+--
+-- Escondites de llave (Selva.keySpots): cada temporada, KeyService decide si alguna llave
+-- queda en uno de ellos.
 -- Las puertas y placas las maneja Puzzles; el Empuje, PowerService.
 
 local CollectionService = game:GetService("CollectionService")
@@ -19,6 +22,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Worm = require(script.Parent.Parent.Bosses.Worm)
+local Pickups = require(script.Parent.Parent.Pickups)
 local Puzzles = require(script.Parent.Parent.Puzzles)
 local DataService = require(script.Parent.Parent.Services.DataService)
 local EnemyService = require(script.Parent.Parent.Services.EnemyService)
@@ -33,6 +37,15 @@ local Selva = {}
 local S = Zones.Selva.center
 local GROUND = 2
 local H = 24 -- altura de las paredes del templo
+
+-- Dónde puede quedar una llave (KeyService)
+Selva.keySpots = {
+	{ name = "Arena", position = S + Vector3.new(-38, GROUND, -350) }, -- tras el gusano
+	{ name = "CuartoSecreto", position = S + Vector3.new(40, GROUND, -249) }, -- tras la pared agrietada
+	{ name = "SalaPlaca", position = S + Vector3.new(20, GROUND, -172) }, -- detrás de las columnas
+	{ name = "RaizHueca", position = S + Vector3.new(-100, GROUND, -40) }, -- en la selva, al oeste
+	{ name = "TrasTemplo", position = S + Vector3.new(95, GROUND, -330) }, -- afuera, por detrás
+}
 
 -- Dónde apareces al llegar por el portal
 Selva.arrival = CFrame.lookAt(S + Vector3.new(0, GROUND + 3, 56), S + Vector3.new(0, GROUND + 3, 0))
@@ -509,36 +522,14 @@ local function buildTemple()
 		end
 	end)
 
-	-- La arena: el gusano y, al romperlo, el núcleo y el portal de regreso
+	-- La arena: el gusano y, al romperlo, cristales y el portal de regreso
 	local arena = at(0, -322)
 	hint(folder, "Jefe", at(0, -290), 10)
 	Worm.Build(arena, 36, folder, function(position: Vector3)
 		fx:FireAllClients("Say", "JefeVencido")
-		local core = part(folder, {
-			Name = "NucleoSelva",
-			Size = Vector3.new(2.4, 4, 2.4),
-			CFrame = CFrame.new(position + Vector3.new(0, 4, 0)) * CFrame.Angles(0, math.rad(45), 0),
-			Color = C.core,
-			Material = Enum.Material.Neon,
-			CanCollide = false,
-		})
-		local light = Instance.new("PointLight")
-		light.Color = C.core
-		light.Range = 20
-		light.Brightness = 3
-		light.Parent = core
-		local corePrompt = prompt(core, "Tomar", "Núcleo de la selva", function(player)
-			if DataService.GiveCore(player, "Selva") then
-				fx:FireClient(player, "Chest", core.Position, 0, false)
-				fx:FireClient(player, "Say", "Nucleo")
-			else
-				fx:FireClient(player, "Say", "YaNucleo")
-			end
-		end)
-		-- Si ya lo tomaste, en tu pantalla el núcleo y su aviso desaparecen (client/Prompts)
-		corePrompt:SetAttribute("OcultarSi", "Nucleo_Selva")
-		corePrompt:SetAttribute("EsconderPieza", true)
-		-- Portal de regreso a Puerto Eco
+		-- Una lluvia de cristales (cada vez que lo rompen)
+		Pickups.Drop(position + Vector3.new(0, 3, 0), 30, true)
+		-- Portal de regreso al Nexo
 		local back = part(folder, {
 			Name = "PortalRegreso",
 			Shape = Enum.PartType.Cylinder,

@@ -1,5 +1,5 @@
 -- Cambia cómo se ve el cielo al entrar a una isla (Config/Zones): en la Selva Brumosa todo se
--- llena de niebla verde. Al salir, regresa como en Puerto Eco.
+-- llena de niebla verde. Al salir, regresa como en el Nexo.
 
 local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")

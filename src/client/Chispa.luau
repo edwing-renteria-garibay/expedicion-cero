@@ -3,7 +3,8 @@
 --     Si dice varias cosas seguidas, las forma en fila.
 --   * Pistas: la primera vez que te acercas a un lugar con etiqueta "Pista" dice su frase.
 --   * Escanear (R, o Triángulo / Y en control): marca a los enemigos cercanos con un brillo
---     que se ve a través de las paredes y te dice cuántos ve.
+--     que se ve a través de las paredes y te dice cuántos ve. Además le pregunta al servidor
+--     (remote Llaves) si hay una llave cerca: frío, tibio o caliente.
 -- Las frases y los números están en Config/Drone.
 
 local CollectionService = game:GetService("CollectionService")
@@ -16,6 +17,7 @@ local Actions = require(script.Parent.Actions)
 local Drones = require(script.Parent.Drones)
 local Sfx = require(script.Parent.Sfx)
 
+local keyRemote = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Llaves") :: RemoteEvent
 local player = Players.LocalPlayer
 
 local Chispa = {}
@@ -214,6 +216,8 @@ local function scan(_, state: Enum.UserInputState)
 	if secrets > 0 then
 		Chispa.Say("Secretos", secrets)
 	end
+	-- ¿Hay una llave cerca? (lo sabe el servidor; contesta con una frase de Chispa)
+	keyRemote:FireServer("pista")
 	return Enum.ContextActionResult.Sink
 end
 

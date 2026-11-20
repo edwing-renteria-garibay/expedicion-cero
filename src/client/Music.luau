@@ -1,4 +1,4 @@
--- La música de fondo (Config/Music): una canción en Puerto Eco, otra en cada isla y otra cuando
+-- La música de fondo (Config/Music): una canción en el Nexo, otra en cada isla y otra cuando
 -- estás cerca de un jefe vivo (tapa la de la isla). Al cambiar, una baja poco a poco y la otra
 -- sube, para que no se corte de golpe. Las que tienen número 0 no suenan.
 

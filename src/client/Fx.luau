@@ -3,7 +3,7 @@
 --   "Swing" (personaje, golpe) -> la animación del golpe de OTRO jugador
 --   "Dodge" (personaje)        -> la rodada de otro jugador
 --   "Zap"   (jugador, posición) -> el rayito de su Chispa
---   "Say"   (frase)            -> Chispa dice algo (Config/Drone)
+--   "Say"   (frase, dato?)     -> Chispa dice algo (Config/Drone)
 --   "Hurt"  (de dónde)         -> te pegaron: la pantalla se pone roja un instante
 --   "Dodged"                   -> rodaste a tiempo: "¡Esquivado!"
 --   "Crystal" / "Heart"        -> recogiste un cristal o un corazón
@@ -287,7 +287,12 @@ function Fx.Start()
 				Sfx.Play("zap")
 			end
 		elseif kind == "Say" then
-			Chispa.Say(a)
+			-- Algunas frases llevan un dato (por ejemplo, "Llevas %d de 7")
+			if b ~= nil then
+				Chispa.Say(a, b)
+			else
+				Chispa.Say(a)
+			end
 		elseif kind == "Hurt" then
 			hurt()
 			Sfx.Play("hurt")

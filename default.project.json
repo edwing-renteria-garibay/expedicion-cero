@@ -28,6 +28,9 @@
         },
         "Room": {
           "$className": "RemoteEvent"
+        },
+        "Llaves": {
+          "$className": "RemoteEvent"
         }
       }
     },

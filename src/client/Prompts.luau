@@ -1,11 +1,12 @@
--- Esconde en TU pantalla los avisos de cosas que ya tomaste (cofres, el gran cofre, el núcleo),
+-- Esconde en TU pantalla los avisos de cosas que ya tomaste (cofres, el gran cofre, las llaves),
 -- para que no parezca que todavía hay algo ahí.
 --
 -- Cada aviso (ProximityPrompt) que se puede esconder tiene el atributo OcultarSi con el nombre
 -- de un atributo del jugador (por ejemplo "Cofre_CofrePlaya" o "Empuje"). Si tú lo tienes, el
 -- aviso se apaga solo para ti. Además:
 --   * si el cofre tiene tapa ("Tapa"), se ve abierto
---   * con el atributo EsconderPieza, la pieza desaparece (por ejemplo, el núcleo)
+--   * con el atributo EsconderPieza, la pieza desaparece; con EsconderPieza = "Modelo",
+--     desaparece todo el modelo (por ejemplo, una llave)
 
 local Players = game:GetService("Players")
 
@@ -38,11 +39,17 @@ local function refresh(prompt: ProximityPrompt)
 	if taken then
 		openLid(prompt)
 		local piece = prompt.Parent
-		if prompt:GetAttribute("EsconderPieza") and piece and piece:IsA("BasePart") then
-			piece.LocalTransparencyModifier = 1
-			local light = piece:FindFirstChildOfClass("PointLight")
-			if light then
-				light.Enabled = false
+		local hide = prompt:GetAttribute("EsconderPieza")
+		local whole = if hide == "Modelo" and piece then piece:FindFirstAncestorOfClass("Model") else nil
+		local pieces = if whole then whole:GetDescendants() elseif hide and piece then { piece } else {}
+		for _, item in pieces do
+			if item:IsA("BasePart") then
+				item.LocalTransparencyModifier = 1
+			end
+			for _, effect in item:GetChildren() do
+				if effect:IsA("PointLight") or effect:IsA("ParticleEmitter") then
+					effect.Enabled = false
+				end
 			end
 		end
 	end

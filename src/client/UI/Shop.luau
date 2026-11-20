@@ -1,5 +1,5 @@
 -- Los menús de la TIENDA (B) y del TALLER de Chispa (T). También se abren con el aviso de la
--- puerta de cada casa en Puerto Eco.
+-- puerta de cada casa en el Nexo.
 --
 --   Tienda, pestaña Cristales: bastón reforzado y contenedores de corazón (Config/Shop)
 --   Tienda, pestaña Robux:     pases y bolsas de cristales (Config/Store). Lo que aún no tiene

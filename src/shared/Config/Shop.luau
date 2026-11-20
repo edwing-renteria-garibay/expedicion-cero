@@ -1,6 +1,6 @@
 -- Lo que se compra con CRISTALES. Cada mejora tiene niveles: el precio de cada nivel, en orden.
 --
--- Tienda (la casa de techo rojo en Puerto Eco, o el botón TIENDA):
+-- Tienda (la casa de techo rojo en el Nexo, o el botón TIENDA):
 --   Baston   = el bastón pega más (+15% por nivel)
 --   Corazon  = un contenedor de corazón (+1 corazón)
 -- Taller de Chispa (la casa de techo azul, o el botón TALLER):

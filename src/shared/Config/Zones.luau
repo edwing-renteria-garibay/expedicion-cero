@@ -1,6 +1,6 @@
 -- Dónde está cada isla y cómo se ve por dentro (el cliente cambia la niebla al entrar).
 --
---   center = el centro de la isla (las islas están lejos de Puerto Eco, en el mismo lugar)
+--   center = el centro de la isla (las islas están lejos del Nexo, en el mismo lugar)
 --   area   = el rectángulo donde está todo lo de la isla (para saber si estás adentro)
 --   fog    = la niebla al estar adentro (Atmosphere)
 

@@ -1,6 +1,6 @@
 -- Punto de entrada del cliente: el bastón (golpes, combo y giro), rodar, fijar objetivo,
 -- los poderes (Empuje), Chispa (el dron que te sigue, habla y escanea), los efectos, tus
--- corazones y cristales, la barra del jefe, el pedestal de núcleos, la niebla de cada isla, la
+-- corazones y cristales, la barra del jefe, el pedestal de las llaves, la niebla de cada isla, la
 -- lista de controles, los botones de celular, la tienda y el taller, las salas privadas y la
 -- música.
 

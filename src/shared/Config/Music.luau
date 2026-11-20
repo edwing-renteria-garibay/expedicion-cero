@@ -1,7 +1,7 @@
 -- La música de fondo. Pon el número de una canción de la Caja de herramientas de Studio
 -- (Toolbox > Audio > Música). 0 = sin música.
 --
---   Puerto = en Puerto Eco
+--   Puerto = en el Nexo
 --   Selva  = en la Selva Brumosa
 --   Jefe   = cuando estás cerca de un jefe (tapa la de la isla)
 

@@ -1,17 +1,19 @@
 # Expedición Cero
 
-Aventura de acción en tercera persona para Roblox, de 1 a 4 jugadores. Eres un explorador del
-Cuerpo Cero y, con tu dron compañero **Chispa** y tu bastón de energía, recuperas los cuatro
-núcleos que el Óxido robó del Archipiélago Eco. Es el tercer juego de la serie "Cero", después
+Aventura de acción en tercera persona para Roblox, de 1 a 4 jugadores, en un **mundo de
+portales**. Desde el Nexo saltas a mundos de distintos tipos de juego con tu dron compañero
+**Chispa** y tu bastón de energía, buscando las **7 llaves** que cambian de lugar cada temporada
+(2 semanas). Quien junta las 7 es **Leyenda**. Es el tercer juego de la serie "Cero", después
 de Escuadrón Cero y Frecuencia Cero.
 
-Documento de diseño: https://claude.ai/artifact/GYB3zhAxfYH2UVzHY8XDz4
+Diseño (mundo de portales): https://claude.ai/artifact/QMSP35w4wRHy4pg7s1S5eV
+(el primero, de cuando eran 4 islas: https://claude.ai/artifact/GYB3zhAxfYH2UVzHY8XDz4)
 
 ## Qué hay
 
-- **Puerto Eco**, la isla central en estilo caricatura: mar, playa, palmeras, la plaza con el
-  pedestal vacío de los núcleos, cuatro portales apagados (Selva Brumosa, Volcán Brasa, Glaciar
-  Silencio, Ruinas del Cielo), la tienda y el taller de Chispa y el
+- **El Nexo**, la isla central en estilo caricatura: mar, playa, palmeras, la plaza con el
+  pedestal de las 7 llaves y el tablero de la temporada, un anillo de **9 portales** (por ahora
+  solo abre la Selva Brumosa), el **Salón de Leyendas**, la tienda y el taller de Chispa y el
   **campo de práctica** con muñecos (`src/server/World.luau`, `src/server/Dummies.luau`)
 - **Bastón de energía** en la mano de cada jugador (`src/shared/StaffModel.luau`):
   - **Clic**: golpe. Tres clics seguidos hacen el combo; el tercero es un remate que pega más
@@ -54,10 +56,16 @@ Documento de diseño: https://claude.ai/artifact/GYB3zhAxfYH2UVzHY8XDz4
   4. Pared agrietada (rómpela con Empuje) que esconde la llave del jefe
   5. **Gusano de chatarra gigante** (`src/server/Bosses/Worm.luau`): sale de la tierra donde
      ves el círculo café y se lanza contra ti. Su armadura aguanta el bastón: túmbalo con
-     Empuje y pégale mientras está en el piso. Suelta el **núcleo de la selva** y un portal de
-     regreso
+     Empuje y pégale mientras está en el piso. Suelta muchos cristales y un portal de regreso
   - El templo se vuelve a cerrar si nadie está en la selva por un minuto
-- El **pedestal** de la plaza enciende un hueco por cada núcleo que tengas
+- **Las 7 llaves** (`src/server/Services/KeyService.luau`, `src/shared/Config/Keys.luau`):
+  - cada temporada de 2 semanas cambian de mundo y de escondite (igual en todos los servidores)
+  - **R**: Chispa dice si hay una llave cerca (frío, tibio o caliente; con el escáner del
+    taller, también hacia dónde)
+  - el pedestal del Nexo enciende un hueco por cada llave tuya
+  - con las 7 eres **Leyenda**: nombre en el Salón de Leyendas (los 3 primeros con estatua),
+    título y aura dorada
+  - en Studio, Output dice dónde quedó cada llave (para probar)
 - Puertas, placas, bloques y paredes agrietadas: `src/server/Puzzles.luau`
 
 - **Tienda** (B, o el aviso de su puerta) y **Taller de Chispa** (T) para gastar cristales
@@ -78,8 +86,8 @@ Documento de diseño: https://claude.ai/artifact/GYB3zhAxfYH2UVzHY8XDz4
   (0 = sin música) (`src/client/Music.luau`)
 - En celular, la tienda, el taller y las salas están en el botón MENÚ de arriba a la derecha
 
-Lo que sigue: ícono y miniatura, publicar, revivir a un amigo en co-op y la segunda isla, el
-Volcán Brasa.
+Lo que sigue (semanas 6 a 8): Volcán Brasa y Arena del Óxido, Pista Neón y Mansión Eco, y
+Glaciar, Ruinas, Laberinto, Píxel y el mundo secreto. Luego publicar.
 
 ## Cómo probarlo
 

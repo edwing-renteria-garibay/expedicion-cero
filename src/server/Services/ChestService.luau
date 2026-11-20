@@ -1,4 +1,4 @@
--- Los cofres escondidos de Puerto Eco (los arma World con la etiqueta "Cofre").
+-- Los cofres escondidos del Nexo (los arma World con la etiqueta "Cofre").
 --
 -- Cada cofre tiene un aviso "Abrir" (mantén E, o tócalo en celular). Cada jugador puede abrir
 -- cada cofre una vez (se guarda): da cristales y el cofre grande de la chatarrería, además,
